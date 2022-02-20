@@ -1,14 +1,17 @@
 import { Avatar } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom'
+import { OPEN_NOTIFY } from '../../redux/types/alertTypes';
 import { IProducts, RootStore } from '../../utils/TypeScript';
 import Menu from './Menu';
 
 function NavBar() {
   const [ham, setHam] = useState(false)
-  const { auth, cart } = useSelector((state: RootStore) => state)
   const [total, setTotal] = useState(0)
+
+  const { auth, cart, openNotify } = useSelector((state: RootStore) => state)
+  const dispatch = useDispatch()
 
   useEffect(()=> {
     const totalItems = cart.reduce((prev: number, item: IProducts) => {
@@ -22,7 +25,7 @@ function NavBar() {
       <div className='max-w-7xl m-auto w-full px-3 flex justify-between items-center'>
          <i className='bx bx-grid-alt text-xl font-semibold md:hidden' onClick={()=> setHam(!ham)} ></i>
 
-          <Link to='/' className='text-lg font-bold tacking-widest'> OZGENDO </Link>
+          <Link to='/' className='text-lg font-bold tacking-widest'> ECCOMERCE </Link>
 
           <Menu ham={ham} setHam={setHam} />
           
@@ -30,9 +33,11 @@ function NavBar() {
              <i className='bx bx-search-alt-2 text-xl cursor-pointer' ></i>
 
             { auth.accessToken && <div className='relative'>
-                 <i className='bx bx-bell text-xl cursor-pointer font-bold'></i>
+                 <i className='bx bx-bell text-xl cursor-pointer font-bold' 
+                      onClick={()=> dispatch({ type: OPEN_NOTIFY, payload: !openNotify })}></i>
                  <p className='absolute -top-1.5 -right-1.5 animate-bounce'>0</p>
-              </div> }
+              </div>
+            }
 
 
              { auth.user?.role !== 'admin' && <Link to="/cart" className='relative'>

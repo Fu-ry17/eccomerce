@@ -46,7 +46,6 @@ const Menu: React.FC<Iprops> = ({ ham, setHam }) => {
 
    useEffect(()=> {
        const show = localStorage.getItem('ham')
-
        if(show) {
            setData(true)
        }else{

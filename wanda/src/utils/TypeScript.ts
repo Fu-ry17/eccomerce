@@ -65,5 +65,5 @@ export interface IOrders{
     phone?: string,
     location: string,
     notes: string,
-    paymentMethod: string
+    paymentMethod: string,
 }

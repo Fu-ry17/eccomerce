@@ -39,12 +39,11 @@ export default function App() {
     localStorage.setItem('cart', new_item)
   },[cart])
 
-
   return <div className='font-poppins bg-white'>
     <main className='lg:max-w-7xl m-auto px-3 mt-16 min-h-[calc(100vh-4rem)] bg-white'>
       <NavBar />
       <Alert />
-      {/* <Notification /> */}
+      <Notification />
       <Routes>
         <Route path="/" element={<Shop />}/>
         <Route path="/:page" element={<PageRender />}/>

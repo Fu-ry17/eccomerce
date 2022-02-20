@@ -1,14 +1,36 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ShopCard from '../components/shop/ShopCard';
 import { RootStore } from '../utils/TypeScript';
 
 function Shop() {
-  const { shop } = useSelector((state: RootStore) => state)
+  const { shop, categories } = useSelector((state: RootStore) => state)
+  const [categName, setCategoryName] = useState('')
+
+  const navigate = useNavigate()
+
+  useEffect(()=> {
+     if(!categName) return
+     if(categName) navigate(`/category/${categName}`)
+  },[categName, navigate])
 
   return <div className='h-full mb-8'>
-      <h1 className='text-2xl py-8 font-semibold tracking-wider'> All Products </h1>
+
+      <div className='flex justify-between w-full flex-wrap'>
+         <h1 className='text-2xl py-8 font-semibold tracking-wider'> All Products </h1>
+         
+         <select name='category' value={categName} onChange={e => setCategoryName(e.target.value)} className="outline-none bg-white">
+             <option> choose a category</option>
+             {
+                 categories.map(item =>(
+                     <option key={item._id}>{item.name}</option>
+                 ))
+             }
+         </select>
+
+      </div>
+     
 
       <div className='w-full m-auto'>
           {

@@ -10,5 +10,7 @@ router.post('/stk_push',mpesaAccessToken, auth, orderCtrl.stkPush)
 
 router.post('/response', orderCtrl.response)
 
+router.get('/user/orders/:id', auth, orderCtrl.getUserOrders)
+
 
 export default router

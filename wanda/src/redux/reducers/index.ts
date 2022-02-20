@@ -5,6 +5,9 @@ import categoryReducer from "./categoryReducer";
 import shopReducer from "./shopReducer";
 import cartReducer from "./cartReducer";
 import productsReducer from "./productsReducer";
+import categoryProductReducer from "./categoryProductReducer";
+import openNotification from "./openNotification";
+import userOrderReducer from "./userOrdersreducer";
 
 const reducers = combineReducers({
     auth: authReducer,
@@ -12,7 +15,10 @@ const reducers = combineReducers({
     categories: categoryReducer,
     shop: shopReducer,
     cart: cartReducer,
-    products: productsReducer
+    products: productsReducer,
+    productCategory: categoryProductReducer,
+    openNotify: openNotification,
+    userOrders: userOrderReducer
 })
 
 export default reducers

@@ -12,7 +12,7 @@ interface IProps{
 const ShopCard: React.FC<IProps> = ({ product }) => {
    const dispatch = useDispatch() 
    const { cart } = useSelector((state: RootStore) => state)
-
+ 
   return <div className='overflow-x-hidden'>
  
    <Link to={`/shop/${product.slug}`}>

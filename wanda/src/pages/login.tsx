@@ -1,6 +1,6 @@
 import React, { FormEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import NotFound from '../components/NotFound';
 import { login } from '../redux/actions/authActions';
 import { InputChange, RootStore } from '../utils/TypeScript';
@@ -11,6 +11,10 @@ export default function Login() {
   const { account, password} = user
 
   const navigate = useNavigate()
+  // work on locations redirects
+  // const location = useLocation()
+
+  // console.log(location.search)
 
   const dispatch = useDispatch()
   const { auth } = useSelector((state: RootStore) => state)

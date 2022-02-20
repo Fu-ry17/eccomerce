@@ -5,7 +5,7 @@ import Loading from '../../components/alert/Loading';
 import NotFound from '../../components/NotFound';
 import { ALERT } from '../../redux/types/alertTypes';
 import { getAPI } from '../../utils/fetchData';
-import { IProducts, RootStore } from '../../utils/TypeScript';
+import { Images, IProducts, RootStore } from '../../utils/TypeScript';
 import { Image } from '@chakra-ui/react';
 import { addToCart } from '../../redux/actions/cartActions';
 import ShopCard from '../../components/shop/ShopCard';
@@ -15,16 +15,20 @@ function ProductDetails() {
   const dispatch = useDispatch()
   const [product, setProduct] = useState<IProducts>()
   const [relatedProducts, setRelatedProducts] = useState<IProducts[]>()
+  const [images, setImages] = useState<Images[]>()
+  const [index, setIndex] = useState(0)
   const { cart, products } = useSelector((state: RootStore) => state)
 
-
    useEffect(()=> {
+      if(!slug) return
        getAPI(`products/${slug}`)
          .then(res =>{
-             setProduct(res.data.product)
+              setProduct(res.data.product)
+              if(!product) return
+              setImages(product.images)  
          })
          .catch(error => dispatch({ type: ALERT, payload: { error: error.response.data.msg}}))
-   },[slug, dispatch])
+   },[slug, dispatch, product])
 
    useEffect(()=> {
        if(!product) return
@@ -32,9 +36,10 @@ function ProductDetails() {
        setRelatedProducts(new_products)
    },[product, products])
 
+
    if(!slug) return <NotFound />
 
-   if(!product) return <Loading />
+   if(!product || !images) return <Loading />
 
    if(!relatedProducts) return <Loading />
 
@@ -43,14 +48,14 @@ function ProductDetails() {
        <div className='grid grid-cols-1 md:grid-cols-2 gap-4 py-8'>
 
          <div className='mb-4'>
-            <Image src={product.images[0].url} alt="images"
+            <Image src={images[index].url} alt="images"
             className='rounded-md w-full max-w-[416px] max-h-[400px] object-cover object-top block shadow-sm hover:shadow-lg '/>
 
                   <div className='grid grid-cols-4 gap-2 max-h-[130px] overflow-auto py-2'>
                     {
-                      product.images.length > 1 && product.images.map((item, i) =>(
+                      images.length > 1 &&  images.map((item, i) =>(
                             <div key={i}>
-                               <img src={item.url} alt="images" 
+                               <img src={item.url} alt="images" onClick={()=> setIndex(i)}
                                className='block w-full max-h-[110px] cursor-pointer rounded-md'/>
                             </div>  
                         ))
@@ -58,7 +63,7 @@ function ProductDetails() {
                   
                 </div>
          </div>
-       
+      
           <div>
             
             <div className='flex justify-between '>

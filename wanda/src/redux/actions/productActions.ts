@@ -3,7 +3,7 @@ import { getAPI, postAPI } from "../../utils/fetchData"
 import { imageUpload } from "../../utils/imageUpload"
 import { IProducts } from "../../utils/TypeScript"
 import { ALERT, IAlertTypes } from "../types/alertTypes"
-import { GET_PRODUCTS, IGetProductTypes, IGetShopProductTypes, SHOP } from "../types/productTypes"
+import { GET_PRODUCTS, GET_PRODUCTS_BY_CATEGORY, IGetByCategoryTypes, IGetProductTypes, IGetShopProductTypes, SHOP } from "../types/productTypes"
 
 
 export const getShopProducts = () => async(dispatch: Dispatch<IAlertTypes | IGetShopProductTypes>) => {
@@ -13,6 +13,19 @@ export const getShopProducts = () => async(dispatch: Dispatch<IAlertTypes | IGet
 
         dispatch({ type: SHOP, payload: res.data.products })
         dispatch({ type: ALERT, payload: {} })
+
+    } catch (error: any) {
+        dispatch({ type: ALERT, payload: { error: error.response.data.msg} }) 
+    }
+}
+
+export const getProductByCategory = (category: string) => async(dispatch: Dispatch<IAlertTypes | IGetByCategoryTypes>) => {
+    try {
+        dispatch({ type: ALERT, payload: { loading: true } })
+        const res = await getAPI(`category/products/${category}`)
+
+        dispatch({ type: GET_PRODUCTS_BY_CATEGORY, payload: { ...res.data, id: category }})
+        dispatch({ type: ALERT, payload: { } })
 
     } catch (error: any) {
         dispatch({ type: ALERT, payload: { error: error.response.data.msg} }) 

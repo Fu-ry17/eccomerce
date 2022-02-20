@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import PhoneInput from 'react-phone-input-2'
 import { useDispatch, useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 import { createOrder } from '../../redux/actions/orderActions'
 import { InputChange, IProducts, RootStore } from '../../utils/TypeScript'
 
@@ -88,10 +89,19 @@ const UserDetails: React.FC<IProps> = ({ cart }) => {
        className='w-full border hover:border-gray-400 rounded-md p-2 outline-none' rows={5} cols={5} style={{ resize: 'none'}} />
      </div>
      
-     <div>
-       <button className='bg-red-400 text-white py-2 md:w-1/2 px-2 w-full rounded-md' onClick={()=> dispatch(createOrder(phone, data, cart, auth, total ))}>
-           Check Out (ksh: {total.toFixed(2)}) 
-      </button>
+     <div className='w-full'>
+       {
+         auth.accessToken ?
+          <button className='bg-red-400 text-white py-2 md:w-1/2 px-2 w-full rounded-md' onClick={()=> dispatch(createOrder(phone, data, cart, auth, total ))}>
+               Check Out (ksh {total.toFixed(2)}) 
+          </button> :
+           <Link to={`/login?cart`}>
+             <button className='bg-red-400 text-white py-2 md:w-1/2 px-2 w-full rounded-md'>
+                   Sign in (ksh {total.toFixed(2)}) 
+             </button>
+          </Link> 
+       }
+  
      </div>
    </div>
   )
