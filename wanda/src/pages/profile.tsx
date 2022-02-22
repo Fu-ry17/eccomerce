@@ -16,14 +16,14 @@ function Profile() {
   
 
   return (
-    <div className='grid md:grid-cols-2 max-w-5xl m-auto pt-8'>
+    <div className='grid md:grid-cols-2 max-w-5xl m-auto py-8 gap-6'>
 
         <div>
            <UserProfile user={auth.user} token={auth.accessToken} />
            <WishList />
         </div>
 
-        <UserOrders />
+        <UserOrders id={auth.user._id} />
     </div>
   )
 }

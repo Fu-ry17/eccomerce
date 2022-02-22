@@ -1,5 +1,5 @@
 import { Dispatch } from "redux";
-import { postAPI } from "../../utils/fetchData";
+import { getAPI, postAPI } from "../../utils/fetchData";
 import { IOrders, IProducts } from "../../utils/TypeScript";
 import { validOrder } from "../../utils/valid";
 import { ALERT, IAlertTypes } from "../types/alertTypes";
@@ -21,11 +21,11 @@ export const createOrder = (phone: string, data: IOrders, cart: IProducts[], aut
               window.location.href = '/'
            }, 1000) 
        }else if(data.paymentMethod === 'M-pesa'){
-         const res = await postAPI('stk_push', { phone, amount }, auth.accessToken)
-         dispatch({ type: ALERT, payload: { success: res.data.msg }})
-
-          const response = await postAPI('response')
-          console.log(response)
+           const res = await postAPI('stk_push', { phone, amount }, auth.accessToken)
+           dispatch({ type: ALERT, payload: { success: res.data.msg }})
+         
+            const response = await getAPI('m-pesa/response')
+            console.log(response)
        }
         
     } catch (error: any) {

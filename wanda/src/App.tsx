@@ -11,13 +11,14 @@ import Shop from './pages/shop'
 import { refreshToken } from './redux/actions/authActions';
 import { getCategories } from './redux/actions/categoryActions';
 import { getAllProducts, getShopProducts } from './redux/actions/productActions';
+import { getuserOrders } from './redux/actions/userActions';
 import { GET_CART } from './redux/types/cartTypes';
 import { RootStore } from './utils/TypeScript';
 
 
 export default function App() {
   const dispatch = useDispatch()
-  const { cart} = useSelector((state: RootStore) => state)
+  const { cart, auth } = useSelector((state: RootStore) => state)
 
   useEffect(()=> {
     const check = localStorage.getItem('cart')
@@ -26,13 +27,18 @@ export default function App() {
       dispatch({ type: GET_CART, payload: loaded })
     }
   },[dispatch])
-
+  
   useEffect(()=> {
      dispatch(getShopProducts())
      dispatch(getCategories())
      dispatch(refreshToken())
      dispatch(getAllProducts())
   },[dispatch])
+
+  useEffect(()=>{
+    if(!auth.accessToken || !auth.user) return
+    dispatch(getuserOrders( auth.user._id, auth.accessToken))
+  },[dispatch, auth.accessToken, auth.user])
 
   useEffect(()=>{
     const new_item = JSON.stringify(cart)

@@ -1,22 +1,31 @@
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { getuserOrders } from '../../redux/actions/userActions'
+import React from 'react'
+import { useSelector } from 'react-redux'
 import { RootStore } from '../../utils/TypeScript'
+import Loading from '../alert/Loading'
+import OrdersCard from '../orders/OrdersCard'
 
-function UserOrders() {
-  
-  const { auth } = useSelector(( state: RootStore) => state)
-  const dispatch = useDispatch()
+interface IProps{
+  id: string
+}
 
-  useEffect(()=> {
-    if(!auth.accessToken || !auth.user) return
+const UserOrders: React.FC<IProps> = ({ id }) => {
 
-    dispatch(getuserOrders( auth.user._id, auth.accessToken))
-  },[])
+  const { userOrders } = useSelector(( state: RootStore) => state)
+
+  if(!userOrders) return <Loading />
+
 
   return (
-    <div>
-        UserOrders
+    <div className=''>
+         <h1 className='text-xl font-semibold tracking-wider'> Your Orders </h1>
+
+            {
+                userOrders.orders?.map((order,i) => (
+                  <OrdersCard key={i} order={order}/>
+                ))
+            }
+        
+
     </div>
   )
 }

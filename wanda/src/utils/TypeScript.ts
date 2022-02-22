@@ -61,9 +61,15 @@ export interface IProducts{
 }
 
 export interface IOrders{
+    _id?: string
     cart?: IProducts[],
+    user?: IUser
     phone?: string,
     location: string,
     notes: string,
     paymentMethod: string,
+    paid?: boolean
+    status?: boolean
+    createdAt?: Date
+    updatedAt?: string
 }
