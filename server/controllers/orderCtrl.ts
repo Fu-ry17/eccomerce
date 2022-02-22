@@ -10,7 +10,7 @@ import Notification from '../models/notifcationModel'
 const dt = require('node-datetime')
 
 const Pagination = (req: IReqAuth) => {
-    const limit = Number(req.query.limit) * 1 || 4
+    const limit = Number(req.query.limit) * 1 || 5
     const page = Number(req.query.page) * 1 || 1
     const skip = (page - 1) * limit
 
@@ -71,7 +71,7 @@ const orderCtrl = {
                 "PartyA": phone, // phone number
                 "PartyB": `${process.env.SHORT_CODE}`,
                 "PhoneNumber": phone, // phone number
-                "CallBackURL": "https://fb11-41-81-151-238.ngrok.io/api/response",
+                "CallBackURL": "https://1f27-105-160-52-114.ngrok.io/api/response",
                 "AccountReference": "Fury Store",
                 "TransactionDesc": "Lipa na m-pesa" 
               }
@@ -87,22 +87,24 @@ const orderCtrl = {
               return res.status(500).json({ msg: error.message})
           }
       },
-     //  callback url - incomplete
+     //  mpesa-response  
       response: async(req: IReqAuth, res: Response) => {
           try {
             const { Body } = req.body
             const response = Body.stkCallback.ResultDesc
-            console.log(response)
+
+            if(!response) return res.status(400).json({ msg: 'No response'})
 
             if(response !== 'The service request is processed successfully.')
-             return res.status(400).json({ msg: response})
-
+              return res.status(400).json({ msg: response })
+             
             return res.status(200).json({ msg: response })
 
           } catch (error: any) {
               return res.status(500).json({ msg: error.message})
           }
       },
+      // user-orders   
       getUserOrders: async(req: IReqAuth, res: Response) => {
           if(!req.user) return res.status(200).json({ msg: 'Invalid authorization'})
           try {
@@ -163,6 +165,21 @@ const orderCtrl = {
 
           } catch (error: any) {
               return res.status(500).json({ msg: error.message})   
+          }
+      },
+      getOrderById: async(req: IReqAuth, res: Response) => {
+          try {
+             if(!mongoose.isValidObjectId(req.params.id))
+              return res.status(400).json({ msg: 'Invalid order id'})
+
+              const order = await Orders.findOne({ _id: req.params.id }).populate("user")
+
+              if(!order) return res.status(400).json({ msg: 'No order was found'})
+               
+              return res.status(200).json({ order })
+
+          } catch (error: any) {
+              return res.status(500).json({ msg: error.message})
           }
       }
 }
