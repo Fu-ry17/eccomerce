@@ -26,9 +26,9 @@ const OrdersCard: React.FC<IProps> = ({ order }) => {
             <img src={order.user?.avatar} alt='avatar' 
              className="w-16 h-16 rounded-full object-cover"/>
             
-            <div className='flex flex-wrap gap-4 lg:gap-8'>
-                <span className='block font-bold'>ksh {amount}</span>    
-                <span>{order.paid ? 'Paid' : 'Not paid'}</span>
+            <div className='flex flex-wrap gap-y-1 gap-x-2 lg:gap-8'>
+                <span className='block font-bold'>ksh {amount.toFixed(2)}</span>    
+                <span>{order.status ? 'Delivered' : 'Not Delivered'}</span>
             </div>
 
             <span>{ new Date(order.createdAt as Date).toLocaleDateString()}</span>

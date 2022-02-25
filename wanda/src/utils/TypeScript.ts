@@ -73,3 +73,14 @@ export interface IOrders{
     createdAt?: Date
     updatedAt?: string
 }
+
+export interface INotification{
+    _id: string
+    createdAt: string
+    icon: string
+    message: string
+    read: boolean
+    updatedAt: string
+    url: string,
+    user: IUser
+}

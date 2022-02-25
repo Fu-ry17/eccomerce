@@ -10,6 +10,10 @@ const notificationSchema = new mongoose.Schema({
          type: String,
          default: ''
      },
+     read: {
+         type: Boolean,
+         default: false
+     },
      icon: {
          type: String,
          required: true

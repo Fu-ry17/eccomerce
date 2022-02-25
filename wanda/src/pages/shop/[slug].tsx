@@ -3,12 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import Loading from '../../components/alert/Loading';
 import NotFound from '../../components/NotFound';
-import { ALERT } from '../../redux/types/alertTypes';
-import { getAPI } from '../../utils/fetchData';
 import { Images, IProducts, RootStore } from '../../utils/TypeScript';
 import { Image } from '@chakra-ui/react';
 import { addToCart } from '../../redux/actions/cartActions';
 import ShopCard from '../../components/shop/ShopCard';
+import LikeButton from '../../components/shop/LikeButton';
 
 function ProductDetails() {
   const slug = useParams<string>().slug
@@ -21,15 +20,17 @@ function ProductDetails() {
 
    useEffect(()=> {
       if(!slug) return
-       getAPI(`products/${slug}`)
-         .then(res =>{
-              setProduct(res.data.product)
-              if(!product) return
-              setImages(product.images)  
-         })
-         .catch(error => dispatch({ type: ALERT, payload: { error: error.response.data.msg}}))
-   },[slug, dispatch, product])
+      products.forEach(item => {
+         if(item.slug === slug){
+           setProduct(item)
+           if(!product) return
+           setImages(product.images)
+           setIndex(0)
+         }
+      })   
+   },[slug,product,products])
 
+   
    useEffect(()=> {
        if(!product) return
        let new_products = products.filter(item => item.category === product.category)
@@ -66,15 +67,15 @@ function ProductDetails() {
       
           <div>
             
-            <div className='flex justify-between '>
+            <div className='flex justify-between items-center flex-wrap gap-2'>
               <h1 className='text-3xl font-bold uppercase tracking-wider pb-4'> {product.title} </h1>
-              <i className='bx bx-heart text-2xl font-bold cursor-pointer hover:text-red-400'></i>
+              <LikeButton />
             </div>
           
 
             <div>
                 <p className='text-justify'>{product.description}</p>
-                <h1 className='text-xl font-bold py-4'> ksh: {product.price}</h1>
+                <h1 className='text-xl font-bold py-4'> ksh: {Number(product.price).toFixed(2)}</h1>
                 <div className='flex justify-between mb-4 font-semibold'>
                    <span> sold: {product.sold}</span>
                    <span> rating: {product.rating}</span>

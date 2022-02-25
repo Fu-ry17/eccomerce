@@ -24,6 +24,7 @@ app.use('/api', routes.userRouter)
 app.use('/api', routes.categoryRouter)
 app.use('/api', routes.productRouter)
 app.use('/api', routes.orderRouter)
+app.use('/api', routes.notiticationRouter)
 
 // ports
 const PORT = process.env.PORT || 3001

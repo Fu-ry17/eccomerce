@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { IReqAuth } from "../config/interface";
 import Products from "../models/productModel";
+import Users from "../models/userModel"
+import Notification from "../models/notifcationModel"
 import mongoose from 'mongoose'
 
 const Pagination = (req: IReqAuth) => {
@@ -31,6 +33,19 @@ const productCtrl  = {
             const newProduct = new Products({ title: new_title , description, category, price, images, quantityInStock, slug })
 
             await newProduct.save()
+
+            const users = await Users.find()
+
+            let message = 'A new product has been created'
+            let icon = 'https://cdn.vox-cdn.com/thumbor/BG_Wo6a2Xs5SYloPZT_37wsgwDE=/1400x1400/filters:format(jpeg)/cdn.vox-cdn.com/uploads/chorus_asset/file/22000282/maxresdefault.jpg'
+            users.map( async user => {
+                if(user.role !== 'admin'){
+                    const new_notification = new Notification({
+                        user: user._id, message, url: newProduct.slug, icon
+                    })          
+                    await new_notification.save()  
+                }        
+             })
 
             return res.status(200).json({ msg: 'Product created!' , newProduct })
 
@@ -78,19 +93,6 @@ const productCtrl  = {
 
          } catch (error: any) {
              return res.status(500).json({ msg: error.message })
-         }
-     },
-     getProductById: async(req: Request, res: Response) => {
-         try {
-            const product = await Products.findOne({ slug: req.params.slug})
-
-            if(!product) 
-                return res.status(400).json({ msg: 'No product was found!'})
-
-            return res.status(200).json({ product })
-
-         } catch (error: any) {
-             return res.status(500).json({ msg: error.message})
          }
      },
      getProductsByCategory: async(req: IReqAuth, res: Response) => {

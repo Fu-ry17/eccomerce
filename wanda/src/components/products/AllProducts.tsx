@@ -1,7 +1,8 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootStore } from '../../utils/TypeScript';
-import ProductsTable from './ProductsTable';
+import ProductsCard from './ProductsCard';
+
 
 function AllProducts() {
   const { products } = useSelector(( state: RootStore) => state)
@@ -9,8 +10,11 @@ function AllProducts() {
   return <div>
       <h1> All Products </h1>
       
-      <ProductsTable products={products}/>
-
+      {
+        products.map(item => (
+          <ProductsCard key={item._id} product={item}/>
+        ))
+      }
 
   </div>;
 }

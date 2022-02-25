@@ -10,4 +10,6 @@ router.post('/forgot', userCtrl.forgotPassword)
 
 router.patch('/reset',auth, userCtrl.resetPassword)
 
+router.post('/subscribe', auth, userCtrl.subscribe)
+
 export default router

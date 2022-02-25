@@ -57,7 +57,7 @@ const OrderDetails: React.FC<IProps> = ({ cart }) => {
                         </div>
 
                         <div className='flex flex-col items-center justify-center'>
-                           <div className='pb-2'>ksh: {(item.qty as number) * (item.price as number)} </div>  
+                           <div className='pb-2'>ksh {Number((item.qty as number) * (item.price as number)).toFixed(2)} </div>  
                             <i className='bx bx-trash' onClick={()=> dispatch({ type: DELETE_CART, payload: item._id })}></i>
                         </div>
                       

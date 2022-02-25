@@ -7,6 +7,8 @@ import axios from 'axios'
 import Products from '../models/productModel'
 import mongoose from 'mongoose'
 import Notification from '../models/notifcationModel'
+import Users from '../models/userModel'
+import sendEmail from '../config/sendEmail'
 const dt = require('node-datetime')
 
 const Pagination = (req: IReqAuth) => {
@@ -39,12 +41,26 @@ const orderCtrl = {
             const new_order = new Orders({
                 location, paymentMethod, phone, paid, notes, cart, user: req.user._id
             })
-               
-           await new_order.save()
 
+            await new_order.save()
+            let icon = 'https://cdn.vox-cdn.com/thumbor/BG_Wo6a2Xs5SYloPZT_37wsgwDE=/1400x1400/filters:format(jpeg)/cdn.vox-cdn.com/uploads/chorus_asset/file/22000282/maxresdefault.jpg'
+
+            // const new_notification = new Notification({
+            //     user: req.user._id, message , url: new_order._id, icon
+            // })
+
+            const users = await Users.find()
+
+            // users.map(user => {
+            //     if(user.role === 'admin'){
+                    
+            //     }
+            // })
+            
+    
            sendSms(phone, req.user.name)
 
-           return res.status(200).json({ msg: 'you have successfully placed an order'})
+           return res.status(200).json({ msg: 'You have successfully placed an order'})
 
           } catch (error: any) {
              return res.status(500).json({ msg: error.message})
@@ -87,7 +103,6 @@ const orderCtrl = {
               return res.status(500).json({ msg: error.message})
           }
       },
-     //  mpesa-response  
       response: async(req: IReqAuth, res: Response) => {
           try {
             const { Body } = req.body

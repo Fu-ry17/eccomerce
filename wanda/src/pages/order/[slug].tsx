@@ -44,7 +44,7 @@ function OrderDetails() {
           <h1> Name : {order.user?.name} </h1>
           <h2> Contact : {order.phone} </h2>
           <h6> Email: {order.user?.account}</h6>
-          <h3> Delvery-Location : {order.location} </h3>
+          <h3> Delivery-Location : {order.location} </h3>
           <h4> Payment-Method : {order.paymentMethod}</h4>
           <h5> Paid : {order.paid ? 'Paid' : 'Not Paid' } </h5>
           <span> Ordred On : {new Date(order.createdAt as Date).toLocaleDateString()}</span>
@@ -72,7 +72,7 @@ function OrderDetails() {
                       </div>
 
                       <div className='font-semibold'>
-                        ksh: {(item.price as number) * (item.qty as number)}.00
+                        ksh: {Number((item.price as number) * (item.qty as number)).toFixed(2)}
                       </div>
                  
                      </div>

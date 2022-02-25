@@ -91,3 +91,18 @@ export const validateEmail = (email: string) => {
     );
 };
 
+export const permissionCheck = () => {
+
+  if(Notification.permission === 'granted'){
+      return 'Allowed push notifications'
+  }else if(Notification.permission === 'default' || Notification.permission === 'denied'){
+      Notification.requestPermission()
+      .then(res => {
+          return res
+      })
+      .catch(err => console.log(err))
+  }else{
+      return 'Allowed push notifications'
+  }
+    
+}

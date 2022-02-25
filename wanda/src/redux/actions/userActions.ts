@@ -1,9 +1,11 @@
 import { Dispatch } from "redux";
 import { getAPI, patchAPI } from "../../utils/fetchData";
 import { imageUpload } from "../../utils/imageUpload";
+import { IProducts} from "../../utils/TypeScript";
 import { validPassword } from "../../utils/valid";
 import { ALERT, IAlertTypes } from "../types/alertTypes";
 import { AUTH, IAuth, IAuthTypes } from "../types/authTypes";
+import { GET_USER_NOTIFICATIONS, IGetUserNotifyTypes } from "../types/noticationTypes";
 import { GET_USER_ORDERS, IGetUserOrdersTypes } from "../types/orderTypes";
 
 
@@ -56,6 +58,18 @@ export const updatePassword = (password: string, cf_password: string, token: str
     }
 }
 
+// incomplete
+export const likeProduct = (product: IProducts, auth: IAuth) => async(dispatch: any) => {
+    if(!auth.user) return
+    const new_product = { ...product, likes: [auth.user]}
+    console.log(new_product)
+    try {
+        
+    } catch (error: any) {
+        dispatch({ type: ALERT, payload: { error: error.response.data.msg }})   
+    }
+}
+
 export const getuserOrders = (id: string, token: string) => async(dispatch: Dispatch<IAlertTypes | IGetUserOrdersTypes>) => {
     try {
         dispatch({ type: ALERT, payload: { loading: true }})
@@ -64,6 +78,16 @@ export const getuserOrders = (id: string, token: string) => async(dispatch: Disp
         dispatch({ type: GET_USER_ORDERS, payload: res.data })
         dispatch({ type: ALERT, payload: { }})
         
+
+    } catch (error: any) {
+        dispatch({ type: ALERT, payload: { error: error.response.data.msg }})  
+    }
+}
+
+export const getNotifications = (id: string, token: string) => async(dispatch: Dispatch<IAlertTypes | IGetUserNotifyTypes>) => {
+    try {   
+        const res = await getAPI(`notification/user/${id}`, token)
+        dispatch({ type: GET_USER_NOTIFICATIONS, payload: res.data.notification})
 
     } catch (error: any) {
         dispatch({ type: ALERT, payload: { error: error.response.data.msg }})  

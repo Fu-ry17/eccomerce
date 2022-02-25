@@ -8,6 +8,7 @@ import productsReducer from "./productsReducer";
 import categoryProductReducer from "./categoryProductReducer";
 import openNotification from "./openNotification";
 import userOrderReducer from "./userOrdersreducer";
+import userNotificationReducer from "./userNotificationReducer";
 
 const reducers = combineReducers({
     auth: authReducer,
@@ -18,7 +19,8 @@ const reducers = combineReducers({
     products: productsReducer,
     productCategory: categoryProductReducer,
     openNotify: openNotification,
-    userOrders: userOrderReducer
+    userOrders: userOrderReducer,
+    userNotifications: userNotificationReducer
 })
 
 export default reducers

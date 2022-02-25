@@ -61,6 +61,16 @@ const userCtrl = {
     } catch (error: any) {
         return res.status(500).json({ msg: error.message })
     }
+   },
+   subscribe: async(req: IReqAuth, res: Response) => {
+       try {
+           const {subscription} = req.body
+
+           console.log(subscription)
+           
+       } catch (error: any) {
+          return res.status(500).json({ msg: error.message })
+       }
    }
 }
 

@@ -3,6 +3,7 @@ import { IProducts } from "../../utils/TypeScript";
 export const SHOP = 'SHOP'
 export const GET_PRODUCTS = 'GET_PRODUCTS'
 export const GET_PRODUCTS_BY_CATEGORY = 'GET_PRODUCTS_BY_CATEGORY'
+export const LIKE_PRODUCT = 'LIKE_PRODUCT'
 
 export interface IShop{
     count: number
@@ -30,4 +31,9 @@ export interface IGetProductTypes{
 export interface IGetByCategoryTypes{
     type: typeof GET_PRODUCTS_BY_CATEGORY,
     payload: IGetByCategory
+}
+
+export interface ILikeProductTypes{
+    type: typeof LIKE_PRODUCT,
+    payload: IProducts
 }

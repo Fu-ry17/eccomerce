@@ -8,8 +8,6 @@ router.post('/products', auth, validProducts, productCtrl.createProduct)
 
 router.get('/products/shop', productCtrl.getProducts)
 
-router.get('/products/:slug', productCtrl.getProductById)
-
 router.get('/category/products/:id', productCtrl.getProductsByCategory)
 
 router.get('/admin/products', productCtrl.getAllProducts)

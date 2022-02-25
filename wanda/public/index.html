@@ -19,6 +19,34 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+
+    <script>
+      let publicKey = 'BKgOuqL3ad5KjaozlBO4b9d8-UcO1N7-SoMOXgPSoijGyAk9oAD1NH8UfH2EFfcsrJ0ylYCg19A2vfaQ35yea_I'
+
+      window.addEventListener('load', ()=> {
+        if('serviceWorker' in navigator){
+          navigator.serviceWorker.register('sw.js')
+           .then(res => console.log('Success...', res.scope))
+           .catch(error => console.log(error))
+        }
+      })
+
+      function urlBase64ToUint8Array(base64String) {
+          var padding = '='.repeat((4 - base64String.length % 4) % 4);
+          var base64 = (base64String + padding)
+              .replace(/\-/g, '+')
+              .replace(/_/g, '/');
+
+          var rawData = window.atob(base64);
+          var outputArray = new Uint8Array(rawData.length);
+
+          for (var i = 0; i < rawData.length; ++i) {
+              outputArray[i] = rawData.charCodeAt(i);
+          }
+          return outputArray;
+      }
+
+    </script>
    
   </body>
 </html>

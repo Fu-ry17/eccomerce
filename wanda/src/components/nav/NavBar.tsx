@@ -9,8 +9,9 @@ import Menu from './Menu';
 function NavBar() {
   const [ham, setHam] = useState(false)
   const [total, setTotal] = useState(0)
+  const [notify, setNotify] = useState(0)
 
-  const { auth, cart, openNotify } = useSelector((state: RootStore) => state)
+  const { auth, cart, openNotify, userNotifications } = useSelector((state: RootStore) => state)
   const dispatch = useDispatch()
 
   useEffect(()=> {
@@ -19,6 +20,12 @@ function NavBar() {
     },0)
     setTotal(totalItems)
   },[cart])
+
+  useEffect(()=> {
+    const new_notifications = userNotifications.filter(item => item.read !== true) 
+    const notified = Number(new_notifications.length)
+    setNotify(notified)
+  },[userNotifications])
 
 
   return <div className='bg-white fixed top-0 left-0 w-full h-16 flex items-center md:shadow-sm shadow-md z-100'>
@@ -35,7 +42,7 @@ function NavBar() {
             { auth.accessToken && <div className='relative'>
                  <i className='bx bx-bell text-xl cursor-pointer font-bold' 
                       onClick={()=> dispatch({ type: OPEN_NOTIFY, payload: !openNotify })}></i>
-                 <p className='absolute -top-1.5 -right-1.5 animate-bounce'>0</p>
+                 <p className={`absolute -top-1.5 -right-1.5  ${notify > 0 && 'animate-bounce'}`}>{notify}</p>
               </div>
             }
 

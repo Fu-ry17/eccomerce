@@ -11,7 +11,7 @@ import Shop from './pages/shop'
 import { refreshToken } from './redux/actions/authActions';
 import { getCategories } from './redux/actions/categoryActions';
 import { getAllProducts, getShopProducts } from './redux/actions/productActions';
-import { getuserOrders } from './redux/actions/userActions';
+import { getNotifications, getuserOrders } from './redux/actions/userActions';
 import { GET_CART } from './redux/types/cartTypes';
 import { RootStore } from './utils/TypeScript';
 
@@ -38,6 +38,7 @@ export default function App() {
   useEffect(()=>{
     if(!auth.accessToken || !auth.user) return
     dispatch(getuserOrders( auth.user._id, auth.accessToken))
+    dispatch(getNotifications( auth.user._id, auth.accessToken))
   },[dispatch, auth.accessToken, auth.user])
 
   useEffect(()=>{
