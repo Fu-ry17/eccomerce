@@ -7,7 +7,7 @@
     "dev": "ts-node-dev server/index.ts",
     "build": "tsc",
     "start": "node index.js",
-    "heroku-postbuild": "tsc && cd wanda && yarn build"
+    "heroku-postbuild": "tsc && cd wanda && yarn install && yarn build"
   },
   "dependencies": {
     "africastalking": "^0.5.5",
