@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "ts-node-dev server/index.ts",
     "build": "tsc",
-    "start": "node index.js",
+    "start": "node dist/index.js",
     "heroku-postbuild": "tsc && cd wanda && yarn install && yarn build"
   },
   "dependencies": {
