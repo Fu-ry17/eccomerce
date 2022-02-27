@@ -33,7 +33,7 @@ const PORT = process.env.PORT || 3001
 if(process.env.NODE_ENV === 'production'){
    app.use(express.static('wanda/build'))
    app.get('*', (req, res)=>{
-       res.sendFile(path.join(__dirname, 'wanda','build','index.html'))
+       res.sendFile(path.join(__dirname, '../wanda','build','index.html'))
    })
 }
 
