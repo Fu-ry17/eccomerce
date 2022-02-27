@@ -4,6 +4,7 @@ import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
+import path from 'path'
 
 import routes from './routes'
 
@@ -28,6 +29,13 @@ app.use('/api', routes.notiticationRouter)
 
 // ports
 const PORT = process.env.PORT || 3001
+
+if(process.env.NODE_ENV === 'production'){
+   app.use(express.static('wanda/build'))
+   app.get('*', (req, res)=>{
+       res.sendFile(path.join(__dirname, 'wanda','build','index.html'))
+   })
+}
 
 app.listen(PORT, ()=> {
     console.log(`Server is running on port ${PORT}...`)

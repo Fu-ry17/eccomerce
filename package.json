@@ -4,7 +4,10 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "ts-node-dev server/index.ts"
+    "dev": "ts-node-dev server/index.ts",
+    "build": "tsc",
+    "start": "node index.js",
+    "heroku-postbuild": "tsc && cd wanda && yarn build"
   },
   "dependencies": {
     "africastalking": "^0.5.5",
