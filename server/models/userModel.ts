@@ -30,6 +30,10 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    wishList: {
+       type: Array,
+       default: []
+    },
     subscription: {
         type: Array,
         default: []
