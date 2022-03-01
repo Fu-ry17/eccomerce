@@ -18,6 +18,7 @@ export const login = (user: IUserLogin) => async(dispatch: Dispatch<IAlertTypes 
 
     } catch (error: any) {
         dispatch({ type: ALERT, payload: { error: error.response.data.msg }})
+        localStorage.removeItem("store-app")
     }
 }
 
