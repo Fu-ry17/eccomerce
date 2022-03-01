@@ -8,6 +8,7 @@ import { Image } from '@chakra-ui/react';
 import { addToCart } from '../../redux/actions/cartActions';
 import ShopCard from '../../components/shop/ShopCard';
 import LikeButton from '../../components/shop/LikeButton';
+import SoldChart from '../../components/chart/SoldChart';
 
 function ProductDetails() {
   const slug = useParams<string>().slug
@@ -26,6 +27,7 @@ function ProductDetails() {
            if(!product) return
            setImages(product.images)
            setIndex(0)
+           window.scrollTo(0,0)
          }
       })   
    },[slug,product,products])
@@ -95,7 +97,9 @@ function ProductDetails() {
 
        </div>
 
-       <h1> Related Products </h1>
+       <SoldChart related={relatedProducts}/>
+
+       <h1 className='text-2xl pb-4 font-semibold'> Related Products </h1>
        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4 w-full'>
            {
               relatedProducts.map(product => (

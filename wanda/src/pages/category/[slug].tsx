@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import Loading from '../../components/alert/Loading'
 import ShopCard from '../../components/shop/ShopCard'
 import { getProductByCategory } from '../../redux/actions/productActions'
@@ -38,7 +38,14 @@ function Category() {
   return (
     <div className='mb-8'>
 
-       <h1 className='text-2xl py-8 font-semibold tracking-wider'> {slug} </h1>
+        <div className='flex gap-8 items-center py-8'>
+            <Link to="/">
+            <i className='bx bx-left-arrow-alt text-3xl'></i>
+            </Link>
+        
+            <h1 className='text-2xl font-semibold tracking-wider'> {slug} </h1>
+        </div>
+      
         
         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 w-full'>
            {
