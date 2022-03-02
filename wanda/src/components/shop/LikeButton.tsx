@@ -1,10 +1,14 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { likeProduct } from '../../redux/actions/userActions'
 import { IAuth } from '../../redux/types/authTypes'
 import { IProducts } from '../../utils/TypeScript'
 
-function LikeButton() {
+interface IProps{
+   auth: IAuth,
+   product: IProducts
+}
+
+const LikeButton: React.FC<IProps> = ({ auth, product }) => {
      const [like, setLike] = useState(false)
 
      const dispatch = useDispatch()
@@ -12,6 +16,7 @@ function LikeButton() {
      // like
      const handleLike = () => {
         setLike(true)
+       
      } 
   
      // unlike
@@ -25,7 +30,8 @@ function LikeButton() {
             like ?  <i className='bx bxs-heart text-red-400 text-xl' onClick={handleDisLike}></i> 
             : <i className='bx bx-heart cursor-pointer hover:text-red-400 text-xl' onClick={handleLike}></i>
        }
-      <span className=''>0</span>
+      <span className=''>{product.likes?.length}</span>
+
     </span>
   )
 }

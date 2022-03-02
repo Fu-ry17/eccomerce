@@ -24,6 +24,7 @@ export interface IUser extends IUserLogin{
     subscription: object[]
     updatedAt: string
     _id: string
+    wishList: IProducts[]
 }
 
 export interface IUserProfile extends IUserRegister{

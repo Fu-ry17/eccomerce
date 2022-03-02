@@ -92,17 +92,26 @@ export const validateEmail = (email: string) => {
 };
 
 export const permissionCheck = () => {
+        // Let's check if the browser supports notifications
+        if (!("Notification" in window)) {
+          alert("This browser does not support desktop notification");
+        }
+      
+        // Let's check whether notification permissions have already been granted
+        else if (Notification.permission === "granted") {
+          // If it's okay let's create a notification  
+          var notification = new Notification("You have subscribed for push notifications!");
+          localStorage.setItem('notified', "true")
+        }
 
-  if(Notification.permission === 'granted'){
-      return 'Allowed push notifications'
-  }else if(Notification.permission === 'default' || Notification.permission === 'denied'){
-      Notification.requestPermission()
-      .then(res => {
-          return res
-      })
-      .catch(err => console.log(err))
-  }else{
-      return 'Allowed push notifications'
-  }
-    
+      
+        // Otherwise, we need to ask the user for permission
+        else if (Notification.permission === "denied" || Notification.permission === "default" ) {
+          Notification.requestPermission().then(function (permission) {
+            // If the user accepts, let's create a notification
+            if (permission === "granted") {
+              localStorage.setItem('notified', "true")
+            }
+          });
+        }
 }

@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { RootStore } from '../utils/TypeScript'
+import { permissionCheck } from '../utils/valid'
 import NotificationCard from './notification/NotificationCard'
 
 function Notification() {
@@ -8,6 +9,16 @@ function Notification() {
   const { openNotify, userNotifications } = useSelector((state: RootStore) => state) 
   const [allow, setAllow] = useState(false)
   
+  useEffect(()=> {
+    if(allow === true){
+      const check = permissionCheck()
+    }
+  },[allow])
+
+  useEffect(()=> {
+     const check = localStorage.getItem('notified')
+     if(check === "true") setAllow(true)
+  },[])
 
   return (
     <div className={`fixed ${openNotify ? 'right-0': '-right-full' } transition duration-500 ease-out px-2

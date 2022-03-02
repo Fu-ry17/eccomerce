@@ -7,6 +7,7 @@ import { ALERT, IAlertTypes } from "../types/alertTypes";
 import { AUTH, IAuth, IAuthTypes } from "../types/authTypes";
 import { GET_USER_NOTIFICATIONS, IGetUserNotifyTypes } from "../types/noticationTypes";
 import { GET_USER_ORDERS, IGetUserOrdersTypes } from "../types/orderTypes";
+import { ILikeProductTypes, IProductsTypes, LIKE_PRODUCT } from "../types/productTypes";
 
 
 export const updateUser = (name: string, avatar: File, auth: IAuth) => async(dispatch: Dispatch<IAlertTypes| IAuthTypes >) => {
@@ -58,15 +59,24 @@ export const updatePassword = (password: string, cf_password: string, token: str
     }
 }
 
+export const subscribe = () => async() => {
+    
+}
+
 // incomplete
-export const likeProduct = (product: IProducts, auth: IAuth) => async(dispatch: any) => {
+// export const addToWishList = () => async() => {   
+// }
+
+// incomplete
+export const likeProduct = (product: IProducts, auth: IAuth) => async(dispatch: Dispatch<ILikeProductTypes | IAlertTypes>) => {
     if(!auth.user) return
     const new_product = { ...product, likes: [auth.user]}
-    console.log(new_product)
+
     try {
-        
+       dispatch({ type: LIKE_PRODUCT, payload: new_product})
+
     } catch (error: any) {
-        dispatch({ type: ALERT, payload: { error: error.response.data.msg }})   
+       dispatch({ type: ALERT, payload: { error: error.response.data.msg }})   
     }
 }
 

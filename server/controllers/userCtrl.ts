@@ -63,9 +63,10 @@ const userCtrl = {
     }
    },
    subscribe: async(req: IReqAuth, res: Response) => {
+      if(!req.user) return res.status(400).json({ msg: 'Invalid authoriation'})
        try {
            const {subscription} = req.body
-
+         
            console.log(subscription)
            
        } catch (error: any) {

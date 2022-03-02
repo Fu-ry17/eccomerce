@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { addToCart} from '../../redux/actions/cartActions';
 import { IProducts, RootStore } from '../../utils/TypeScript';
 import { Image } from '@chakra-ui/react';
-import { IAuth } from '../../redux/types/authTypes';
-import { likeProduct } from '../../redux/actions/userActions';
 import LikeButton from './LikeButton';
 
 interface IProps{
@@ -34,7 +32,7 @@ const ShopCard: React.FC<IProps> = ({ product }) => {
     <div className='flex justify-between items-center'>
        <span className='font-semibold'> ksh {Number(product.price).toFixed(2)}</span>
 
-       <LikeButton />
+       <LikeButton auth={auth} product={product} />
       
        {
           product.quantityInStock === 0 ?  <i className='bx bxs-cart-add text-xl cursor-pointer px-1 text-red-400' ></i>

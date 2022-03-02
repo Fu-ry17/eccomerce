@@ -18,22 +18,30 @@ export interface IGetByCategory{
    total: number
 }
 
+export interface IGetByCategoryTypes{
+    type: typeof GET_PRODUCTS_BY_CATEGORY,
+    payload: IGetByCategory
+}
+
+// shop
 export interface IGetShopProductTypes{
     type: typeof SHOP,
     payload: IShop[]
 }
 
+
+// products
 export interface IGetProductTypes{
     type: typeof GET_PRODUCTS,
     payload: IProducts[]
-}
-
-export interface IGetByCategoryTypes{
-    type: typeof GET_PRODUCTS_BY_CATEGORY,
-    payload: IGetByCategory
 }
 
 export interface ILikeProductTypes{
     type: typeof LIKE_PRODUCT,
     payload: IProducts
 }
+
+
+export type IShopTypes = IGetShopProductTypes 
+
+export type IProductsTypes = IGetProductTypes | ILikeProductTypes

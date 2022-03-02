@@ -17,7 +17,7 @@ function ProductDetails() {
   const [relatedProducts, setRelatedProducts] = useState<IProducts[]>()
   const [images, setImages] = useState<Images[]>()
   const [index, setIndex] = useState(0)
-  const { cart, products } = useSelector((state: RootStore) => state)
+  const { auth, cart, products } = useSelector((state: RootStore) => state)
 
    useEffect(()=> {
       if(!slug) return
@@ -71,7 +71,7 @@ function ProductDetails() {
             
             <div className='flex justify-between items-center flex-wrap gap-2'>
               <h1 className='text-3xl font-bold uppercase tracking-wider pb-4'> {product.title} </h1>
-              <LikeButton />
+              <LikeButton auth={auth} product={product} />
             </div>
           
 
@@ -97,7 +97,10 @@ function ProductDetails() {
 
        </div>
 
-       <SoldChart related={relatedProducts}/>
+      <div className='z-0 shadow-sm'>
+        <SoldChart related={relatedProducts}/>
+      </div>
+    
 
        <h1 className='text-2xl pb-4 font-semibold'> Related Products </h1>
        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4 w-full'>
