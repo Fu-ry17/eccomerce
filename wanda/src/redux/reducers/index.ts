@@ -8,6 +8,7 @@ import productsReducer from "./productsReducer";
 import categoryProductReducer from "./categoryProductReducer";
 import openNotification from "./openNotification";
 import userOrderReducer from "./userOrdersreducer";
+import wishListReducer from "./wishListReducer";
 import userNotificationReducer from "./userNotificationReducer";
 
 const reducers = combineReducers({
@@ -20,6 +21,7 @@ const reducers = combineReducers({
     productCategory: categoryProductReducer,
     openNotify: openNotification,
     userOrders: userOrderReducer,
+    wishList: wishListReducer,
     userNotifications: userNotificationReducer
 })
 

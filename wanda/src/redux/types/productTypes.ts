@@ -36,12 +36,8 @@ export interface IGetProductTypes{
     payload: IProducts[]
 }
 
-export interface ILikeProductTypes{
-    type: typeof LIKE_PRODUCT,
-    payload: IProducts
-}
 
 
 export type IShopTypes = IGetShopProductTypes 
 
-export type IProductsTypes = IGetProductTypes | ILikeProductTypes
+export type IProductsTypes = IGetProductTypes 

@@ -28,6 +28,18 @@
           navigator.serviceWorker.register('sw.js')
            .then(async res =>{ 
                console.log(res.scope)
+
+               const check = localStorage.getItem('notified')
+               if(check){
+                const data = await res.pushManager.subscribe({
+                   applicationServerKey: urlBase64ToUint8Array(publicKey),
+                   userVisibleOnly: true
+                 })
+                 
+                 const subscribe = JSON.stringify(data)
+                 localStorage.setItem(subscribe)
+
+               }
             })
            .catch(error => console.log(error))
         }

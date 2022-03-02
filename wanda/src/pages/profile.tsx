@@ -8,7 +8,7 @@ import WishList from '../components/profile/WishList'
 import { RootStore } from '../utils/TypeScript'
 
 function Profile() {
-    const { auth } = useSelector((state: RootStore)=> state)
+    const { auth, wishList, cart } = useSelector((state: RootStore)=> state)
 
     if(!auth.accessToken) return <NotFound />
   
@@ -20,7 +20,7 @@ function Profile() {
 
         <div>
            <UserProfile user={auth.user} token={auth.accessToken} />
-           <WishList />
+           <WishList wishList={wishList} cart={cart}/>
         </div>
 
         <UserOrders id={auth.user._id} />

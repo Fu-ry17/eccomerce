@@ -100,7 +100,6 @@ export const permissionCheck = () => {
         // Let's check whether notification permissions have already been granted
         else if (Notification.permission === "granted") {
           // If it's okay let's create a notification  
-          var notification = new Notification("You have subscribed for push notifications!");
           localStorage.setItem('notified', "true")
         }
 

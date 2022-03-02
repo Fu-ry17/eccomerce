@@ -12,7 +12,7 @@ interface IProps{
 
 const ShopCard: React.FC<IProps> = ({ product }) => {
    const dispatch = useDispatch() 
-   const { cart, auth } = useSelector((state: RootStore) => state)
+   const { cart, auth, wishList } = useSelector((state: RootStore) => state)
  
  
   return <div className='overflow-x-hidden'>
@@ -32,7 +32,7 @@ const ShopCard: React.FC<IProps> = ({ product }) => {
     <div className='flex justify-between items-center'>
        <span className='font-semibold'> ksh {Number(product.price).toFixed(2)}</span>
 
-       <LikeButton auth={auth} product={product} />
+       <LikeButton wishList={wishList} product={product} />
       
        {
           product.quantityInStock === 0 ?  <i className='bx bxs-cart-add text-xl cursor-pointer px-1 text-red-400' ></i>
