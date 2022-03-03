@@ -23,6 +23,7 @@
     "morgan": "^1.10.0",
     "node-datetime": "^2.1.2",
     "nodemailer": "^6.7.2",
+    "stripe": "^8.207.0",
     "web-push": "^3.4.5"
   },
   "devDependencies": {

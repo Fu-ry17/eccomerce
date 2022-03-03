@@ -6,7 +6,7 @@ import { ALERT, IAlertTypes } from "../types/alertTypes";
 import { IAuth } from "../types/authTypes";
 
 
-export const createOrder = (phone: string, data: IOrders, cart: IProducts[], auth: IAuth, amount: number) => async(dispatch: Dispatch<IAlertTypes>) => {
+export const createOrder = (phone: string, data: IOrders, cart: IProducts[], auth: IAuth, amount: number, token?: string) => async(dispatch: Dispatch<IAlertTypes>) => {
     try {
         const check = validOrder(phone, data, cart)
         if(check) return dispatch({ type: ALERT, payload: { error: check.msg }})
@@ -22,10 +22,15 @@ export const createOrder = (phone: string, data: IOrders, cart: IProducts[], aut
            }, 1000) 
        }else if(data.paymentMethod === 'M-pesa'){
            const res = await postAPI('stk_push', { phone, amount }, auth.accessToken)
+           dispatch({ type: ALERT, payload: { success: res.data.msg }}) 
+       }else if(data.paymentMethod === 'CreditCard'){
+           console.log(token, amount )
+           const res = await postAPI('/stripe', { ...data, phone, cart, tokenId: token, amount }, auth.accessToken)
            dispatch({ type: ALERT, payload: { success: res.data.msg }})
-         
-            const response = await getAPI('m-pesa/response')
-            console.log(response)
+           localStorage.removeItem('cart')
+           setTimeout(()=> {
+              window.location.href = '/'
+           }, 1000) 
        }
         
     } catch (error: any) {

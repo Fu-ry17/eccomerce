@@ -10,6 +10,8 @@ router.post('/stk_push',mpesaAccessToken, orderCtrl.stkPush)
 
 router.post('/response', orderCtrl.response)
 
+router.post('/stripe', auth, orderCtrl.stripePayment)
+
 router.get('/user/orders/:id', auth, orderCtrl.getUserOrders)
 
 router.get('/orders/:id', auth, orderCtrl.getOrderById)

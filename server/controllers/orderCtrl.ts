@@ -9,6 +9,7 @@ import mongoose from 'mongoose'
 import Notification from '../models/notifcationModel'
 import Users from '../models/userModel'
 import sendEmail from '../config/sendEmail'
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
 const dt = require('node-datetime')
 
 const Pagination = (req: IReqAuth) => {
@@ -43,20 +44,6 @@ const orderCtrl = {
             })
 
             await new_order.save()
-            let icon = 'https://cdn.vox-cdn.com/thumbor/BG_Wo6a2Xs5SYloPZT_37wsgwDE=/1400x1400/filters:format(jpeg)/cdn.vox-cdn.com/uploads/chorus_asset/file/22000282/maxresdefault.jpg'
-
-            // const new_notification = new Notification({
-            //     user: req.user._id, message , url: new_order._id, icon
-            // })
-
-            const users = await Users.find()
-
-            // users.map(user => {
-            //     if(user.role === 'admin'){
-                    
-            //     }
-            // })
-            
     
            sendSms(phone, req.user.name)
 
@@ -66,7 +53,6 @@ const orderCtrl = {
              return res.status(500).json({ msg: error.message})
           }
       },
-      //   m-pesa 
       stkPush: async(req: IReqAuth, res: Response) =>{
           if(!req.access_token) return res.status(400).json({ msg: 'Invalid authorization'})
           try {
@@ -87,7 +73,7 @@ const orderCtrl = {
                 "PartyA": phone, // phone number
                 "PartyB": `${process.env.SHORT_CODE}`,
                 "PhoneNumber": phone, // phone number
-                "CallBackURL": "https://1f27-105-160-52-114.ngrok.io/api/response",
+                "CallBackURL": "https://ed3a-2c0f-fe38-2326-5c71-7196-c864-37f9-8bcf.ngrok.io/api/response",
                 "AccountReference": "Fury Store",
                 "TransactionDesc": "Lipa na m-pesa" 
               }
@@ -106,20 +92,53 @@ const orderCtrl = {
       response: async(req: IReqAuth, res: Response) => {
           try {
             const { Body } = req.body
-            const response = Body.stkCallback.ResultDesc
+            const response = await Body.stkCallback.ResultDesc
 
             if(!response) return res.status(400).json({ msg: 'No response'})
 
             if(response !== 'The service request is processed successfully.')
               return res.status(400).json({ msg: response })
-             
+
+            console.log(response)
+
             return res.status(200).json({ msg: response })
 
           } catch (error: any) {
               return res.status(500).json({ msg: error.message})
           }
       },
-      // user-orders   
+      stripePayment: async(req: IReqAuth, res: Response) => {
+          if(!req.user) return res.status(400).json({ msg: 'Invalid authorization'})
+          try {
+         
+            const { location,paymentMethod,notes, phone, cart, tokenId, amount } = req.body
+
+            const data = await stripe.charges.create({ source: tokenId, amount: amount, currency: "usd" })
+
+            const { paid } = data
+
+            if(paid !== true) return res.status(400).json({ msg: 'Payment failed'})
+
+            const new_cart = <IProducts[]>cart
+
+            new_cart.filter(item => {
+                updateProducts(item._id, item.qty, item.sold, item.quantityInStock)
+            })
+
+            const new_order = new Orders({
+                location, paymentMethod, phone, paid, notes, cart, user: req.user._id
+            })
+
+            await new_order.save()
+
+            sendSms(phone, req.user.name)
+
+           return res.status(200).json({ msg: 'You have successfully placed an order'})
+
+          } catch (error: any) {
+             return res.status(500).json({ msg: error.message})
+          }
+      },
       getUserOrders: async(req: IReqAuth, res: Response) => {
           if(!req.user) return res.status(200).json({ msg: 'Invalid authorization'})
           try {
@@ -196,7 +215,8 @@ const orderCtrl = {
           } catch (error: any) {
               return res.status(500).json({ msg: error.message})
           }
-      }
+      },
+      
 }
 
 const updateProducts = async( id: string, qty: number, oldSold: number, oldStock: number) => {

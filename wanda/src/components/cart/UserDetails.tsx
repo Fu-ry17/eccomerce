@@ -4,6 +4,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { createOrder } from '../../redux/actions/orderActions'
 import { InputChange, IProducts, RootStore } from '../../utils/TypeScript'
+import StripeCheckout from 'react-stripe-checkout';
+import { validOrder } from '../../utils/valid'
+import { ALERT } from '../../redux/types/alertTypes'
 
 interface IProps{
   cart: IProducts[]
@@ -21,6 +24,7 @@ const UserDetails: React.FC<IProps> = ({ cart }) => {
  const paymentMethods = [
     {name: 'M-pesa'},
     {name: 'Paypal'},
+    {name: 'CreditCard'},
     {name: 'On-Delivery'}
  ]
 
@@ -41,6 +45,11 @@ const UserDetails: React.FC<IProps> = ({ cart }) => {
    setData({ ...data, [name]:value})
  }
 
+ const onToken = (token: any) => {
+    console.log(token.id)
+   if(token) dispatch(createOrder(phone, data, cart, auth, total, token.id))
+ }
+
   return (
    <div className='mb-8'>
 
@@ -57,7 +66,7 @@ const UserDetails: React.FC<IProps> = ({ cart }) => {
                 required: true,
                 autoFocus: true
               }}
-              inputClass="w-full border hover:border-gray-400 rounded-md p-2 outline-none"
+              inputClass={`w-full border hover:border-gray-400 rounded-md p-2 outline-none ${!phone && 'border-red-400'}`}
           />
       </div>
 
@@ -91,7 +100,17 @@ const UserDetails: React.FC<IProps> = ({ cart }) => {
      
      <div className='w-full'>
        {
-         auth.accessToken ?
+         auth.accessToken ? paymentMethod === 'CreditCard' ? 
+
+         <StripeCheckout name='fury-store' 
+          billingAddress description={`Your total is  ${total}`}
+          amount={total} stripeKey="pk_test_51KZKaHAVNWYXttSLfmrO1cA0HfAWa6GBmRswLcRYezK0EJ0x1L4GByjo9E3snkn8LyddOOwRtXf4MfYcvEOvzyqy00fOtDuEWq"
+          token={onToken} email={auth.user && auth.user.account}
+           >
+           <button disabled={!phone} className='bg-red-400 text-white py-2 md:w-1/2 px-2 w-full rounded-md'> Credit Card CheckOut (ksh {total.toFixed(2)}) </button>
+         </StripeCheckout>
+          
+         :
           <button className='bg-red-400 text-white py-2 md:w-1/2 px-2 w-full rounded-md' onClick={()=> dispatch(createOrder(phone, data, cart, auth, total ))}>
                Check Out (ksh {total.toFixed(2)}) 
           </button> :
