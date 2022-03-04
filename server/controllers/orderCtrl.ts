@@ -235,9 +235,12 @@ const getMpesaResponse = async (url: string, data: object, token: string, res: R
         const response = await axios.post(url, data, { headers: { Authorization: token}})
 
         if(response.data.ResultCode !== 0){
-            return res.status(200).json({ msg: response.data.ResultDesc})
+            return res.status(400).json({ msg: response.data.ResultDesc})
         }else if(response.data.ResultCode === 0){
-            return res.status(200).json({ msg: response.data.ResultDesc })
+            const reply = 'The service request has been accepted successfully'
+            if(response.data.ResponseDescription === reply){
+                return res.status(200).json({ msg: response.data.ResponseDescription})
+            }   
         }
     } catch (error: any) { 
         const err = error.response.data.errorMessage 
