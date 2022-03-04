@@ -1,4 +1,4 @@
-import  {Request, Response } from 'express'
+import  {Request, response, Response } from 'express'
 import { generatePassword } from '../config/generateTokens'
 import { IProducts, IReqAuth } from '../config/interface'
 import { sendSms } from '../config/sendSms'
@@ -73,14 +73,14 @@ const orderCtrl = {
                 "PartyA": phone, // phone number
                 "PartyB": `${process.env.SHORT_CODE}`,
                 "PhoneNumber": phone, // phone number
-                "CallBackURL": "https://ed3a-2c0f-fe38-2326-5c71-7196-c864-37f9-8bcf.ngrok.io/api/response",
+                "CallBackURL": "https://2ba7-154-122-4-148.ngrok.io/api/response",
                 "AccountReference": "Fury Store",
                 "TransactionDesc": "Lipa na m-pesa" 
               }
 
             axios.post(url, data, { headers: { Authorization: token }})
              .then(resp =>{
-                 return res.status(200).json({ msg: resp.data.CustomerMessage })
+                 return res.status(200).json({ checkOutId: resp.data.CheckoutRequestID })
              }).catch((err: any) => {
                 return res.status(400).json({ msg: err.response.data.errorMessage })
              })
@@ -89,19 +89,30 @@ const orderCtrl = {
               return res.status(500).json({ msg: error.message})
           }
       },
-      response: async(req: IReqAuth, res: Response) => {
+      response: async (req: IReqAuth, res: Response) => {
           try {
-            const { Body } = req.body
-            const response = await Body.stkCallback.ResultDesc
+              const { Body } = req.body
+          } catch (error: any) {
+             return res.status(500).json({ msg: error.message})
+          }
+      },
+      mpesaResponse: async(req: IReqAuth, res: Response) => {
+          if(!req.access_token) return res.status(400).json({ msg: 'Invalid authorization'})
+          try {
+            const formated = dt.create().format('YmdHMS')
+            const password = generatePassword()
+            
+            let token = 'Bearer '+ req.access_token
+            const url = 'https://sandbox.safaricom.co.ke/mpesa/stkpushquery/v1/query'
+            
+            const data = {
+                "BusinessShortCode": `${process.env.SHORT_CODE}`,
+                "Password": password,
+                "Timestamp": formated,
+                "CheckoutRequestID": req.params.checkOutId
+            }
 
-            if(!response) return res.status(400).json({ msg: 'No response'})
-
-            if(response !== 'The service request is processed successfully.')
-              return res.status(400).json({ msg: response })
-
-            console.log(response)
-
-            return res.status(200).json({ msg: response })
+            getMpesaResponse(url, data, token, res)
 
           } catch (error: any) {
               return res.status(500).json({ msg: error.message})
@@ -217,6 +228,24 @@ const orderCtrl = {
           }
       },
       
+}
+
+const getMpesaResponse = async (url: string, data: object, token: string, res: Response) => {
+    try {
+        const response = await axios.post(url, data, { headers: { Authorization: token}})
+
+        if(response.data.ResultCode !== 0){
+            return res.status(200).json({ msg: response.data.ResultDesc})
+        }else if(response.data.ResultCode === 0){
+            return res.status(200).json({ msg: response.data.ResultDesc })
+        }
+    } catch (error: any) { 
+        const err = error.response.data.errorMessage 
+        if(err === 'The transaction is being processed'){
+            console.log({err})
+            setTimeout(()=> getMpesaResponse(url, data, token,res), 2500)
+        }
+    }
 }
 
 const updateProducts = async( id: string, qty: number, oldSold: number, oldStock: number) => {
