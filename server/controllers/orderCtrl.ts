@@ -237,10 +237,10 @@ const getMpesaResponse = async (url: string, data: object, token: string, res: R
         if(response.data.ResultCode !== 0){
             return res.status(400).json({ msg: response.data.ResultDesc})
         }else if(response.data.ResultCode === 0){
-            const reply = 'The service request has been accepted successfully'
-            if(response.data.ResponseDescription === reply){
-                return res.status(200).json({ msg: response.data.ResponseDescription})
-            }   
+            const reply = 'The service request is processed successfully'
+            if(response.data.ResultDesc === reply){
+                return res.status(200).json({ msg: response.data.ResultDesc})
+            } 
         }
     } catch (error: any) { 
         const err = error.response.data.errorMessage 
