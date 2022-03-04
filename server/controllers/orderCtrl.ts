@@ -73,7 +73,7 @@ const orderCtrl = {
                 "PartyA": phone, // phone number
                 "PartyB": `${process.env.SHORT_CODE}`,
                 "PhoneNumber": phone, // phone number
-                "CallBackURL": "https://2ba7-154-122-4-148.ngrok.io/api/response",
+                "CallBackURL": "https://fury-store.herokuapp.com/api/response",
                 "AccountReference": "Fury Store",
                 "TransactionDesc": "Lipa na m-pesa" 
               }
