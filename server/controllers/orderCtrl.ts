@@ -217,7 +217,7 @@ const orderCtrl = {
              if(!mongoose.isValidObjectId(req.params.id))
               return res.status(400).json({ msg: 'Invalid order id'})
 
-              const order = await Orders.findOne({ _id: req.params.id }).populate("user")
+              const order = await Orders.findOne({ _id: req.params.id }).populate("user", "-password")
 
               if(!order) return res.status(400).json({ msg: 'No order was found'})
                
@@ -245,7 +245,7 @@ const orderCtrl = {
 
           try {
               const { status, paid} = req.body
-              const new_order = await Orders.findByIdAndUpdate(req.params.id, { status, paid}, { new: true})
+              const new_order = await Orders.findByIdAndUpdate(req.params.id, { status, paid}, { new: true}).populate('user','-password')
 
               return res.status(200).json({ msg: 'Update success', new_order })
 

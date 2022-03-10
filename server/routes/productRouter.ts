@@ -12,4 +12,7 @@ router.get('/category/products/:id', productCtrl.getProductsByCategory)
 
 router.get('/admin/products', productCtrl.getAllProducts)
 
+router.route('/products/:id')
+      .patch(auth, validProducts, productCtrl.updateProducts)
+
 export default router

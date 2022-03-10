@@ -77,6 +77,8 @@ export const updateOrder = (token: string, data: IOrders) => async(dispatch: Dis
 
         dispatch({ type: UPDATE_ORDER, payload: res.data.new_order})
 
+        console.log(res.data.new_order)
+
         dispatch({ type: ALERT, payload: { success: res.data.msg }})
 
     } catch (error: any) {

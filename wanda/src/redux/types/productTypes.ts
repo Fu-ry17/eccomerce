@@ -4,6 +4,7 @@ export const SHOP = 'SHOP'
 export const GET_PRODUCTS = 'GET_PRODUCTS'
 export const GET_PRODUCTS_BY_CATEGORY = 'GET_PRODUCTS_BY_CATEGORY'
 export const LIKE_PRODUCT = 'LIKE_PRODUCT'
+export const UPDATE_PRODUCT = 'UPDATE_PRODUCT'
 
 export interface IShop{
     count: number
@@ -36,8 +37,12 @@ export interface IGetProductTypes{
     payload: IProducts[]
 }
 
+export interface IUpdateProductTypes{
+   type: typeof UPDATE_PRODUCT,
+   payload: IProducts
+}
 
 
 export type IShopTypes = IGetShopProductTypes 
 
-export type IProductsTypes = IGetProductTypes 
+export type IProductsTypes = IGetProductTypes | IUpdateProductTypes

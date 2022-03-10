@@ -1,5 +1,6 @@
 import { Image } from '@chakra-ui/react'
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import { IProducts } from '../../utils/TypeScript'
 
 interface IProps{
@@ -7,24 +8,26 @@ interface IProps{
 }
 
 const ProductsCard: React.FC<IProps> = ({ product }) => {
+  const navigate = useNavigate()
+
+  const handleUpdate = (id: string) => {
+     if(id) navigate(`/create_product?slug=${id}`)
+  }
 
   return (
-    <div className="flex justify-between items-center shadow-md border rounded-md mb-4 p-2 w-full" >
-      <Image src={product.images[0].url} 
-      className='rounded-md w-full max-w-[80px] max-h-[80px] object-cover object-top block shadow-sm hover:shadow-lg overflow-hidden'/> 
+     <div className='py-4 w-full border-b border-gray-500'>
+        <div className='grid grid-cols-4'>
+          <h1 className='font-bold'>{product.title}</h1>
+          <h2 className='text-center text-sm font-semibold'> {Number(product.price).toFixed(2)}</h2>
+          <h3 className={`${product.quantityInStock === 0 ? 'bg-red-400': 'bg-blue-200'} text-center text-white rounded-md`}>
+            {product.quantityInStock === 0 ? 'inactive' : 'active'}</h3>
 
-      <div className='flex flex-col'>
-            <h3 className=''>{product.title}</h3>
-            <span className="cursor-pointer block"> price : {product.price} </span>
-            <span className='block'>  quantity : {product.quantityInStock} </span>
-      </div>
-
-      <div className='flex flex-col items-center justify-center'>
-          <div className=''> edit  </div>  
-          <i className='bx bx-trash'></i>
-      </div>
-  
-</div>
+          <span className='text-center flex text-lg gap-x-4 items-center justify-center'>
+             <i className='bx bx-pencil cursor-pointer' onClick={()=> handleUpdate(product.slug as string)}></i>
+             <i className='bx bxs-trash'></i>
+          </span>
+        </div>
+     </div>
   )
 }
 

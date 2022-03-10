@@ -1,25 +1,27 @@
+import { Image } from '@chakra-ui/react';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { createProducts } from '../../redux/actions/productActions';
+import { createProducts, updateProduct } from '../../redux/actions/productActions';
 import { ALERT } from '../../redux/types/alertTypes';
 import { validImage } from '../../utils/imageUpload';
-import { InputChange, IProducts, RootStore } from '../../utils/TypeScript';
+import { Images, InputChange, IProducts, RootStore } from '../../utils/TypeScript';
 import { validProducts } from '../../utils/valid';
 
 function CreateProducts() {
   const initialState = { title:'', description: '', price: '', quantityInStock: '', category: '',images: []}
-  const [products, setProducts] = useState<IProducts>(initialState)
-  const [images, setImages] = useState<File[]>([])
+  const [product, setProduct] = useState<IProducts>(initialState)
+  const [images, setImages] = useState<File[] | any[]>([])
+  const [edit, setEdit] = useState(false)
  
   const dispatch = useDispatch()
-  const { categories, auth } = useSelector(( state: RootStore) => state)
+  const { categories, auth, products } = useSelector(( state: RootStore) => state)
 
 
-  const { title, description, price, quantityInStock, category } = products
+  const { title, description, price, quantityInStock, category } = product
 
   const handleChange = (e: InputChange) => {
       const { name, value} = e.target
-      setProducts({ ...products, [name]:value})
+      setProduct({ ...product, [name]:value})
   }
 
   const handleUpload = async (e: any) => {
@@ -44,20 +46,38 @@ function CreateProducts() {
       e.preventDefault()
       if(!auth.accessToken) return
 
-      const check = validProducts(products)
+      const check = validProducts(product)
       if(check) return dispatch({ type: ALERT, payload: {error: check.msg} })
        
       if(images.length === 0) 
          return dispatch({ type: ALERT, payload: { error: 'No image has been uploaded'}})
 
-      dispatch(createProducts(products, images, auth.accessToken))
+      if(edit){
+         dispatch(updateProduct(product, images, auth.accessToken)) 
+      }else{
+         dispatch(createProducts(product, images, auth.accessToken))
+      }     
   }
 
-  return <div>
-      <h1> Create Products</h1>
+  useEffect(()=> {
+      const slug = new URLSearchParams(window.location.search).get('slug')
+      if(slug){
+          products.forEach(item => {
+              if(item.slug === slug){
+                  setProduct(item)
+                  setImages(item.images)
+                  setEdit(true)
+              }
+          })
+      }  
+  },[products])
 
+  return <div>
+
+
+  
       <form onSubmit={handleSubmit}>
-          <span className='grid grid-cols-1 gap-2 md:grid-cols-2 '>
+          <span className='grid grid-cols-1 gap-4 md:gap-2 md:grid-cols-2 '>
 
             <div>
                 <input type="text" name='title' placeholder='Title' className='w-full border hover:border-gray-400 rounded-md p-2 outline-none'
@@ -98,12 +118,12 @@ function CreateProducts() {
             </div>
 
             <div className='col-span-1 md:col-span-2'>
-                <div className='grid grid-cols-4 gap-2 max-h-[210px] overflow-auto p-2'>
+                <div className='grid lg:grid-cols-4 grid-cols-3  gap-2 max-h-[210px] overflow-auto p-2'>
                     {
                         images.map((item, i) =>(
-                            <div key={i}>
-                               <img src={URL.createObjectURL(item)} alt="images" 
-                               className='block w-full max-h-[180px] cursor-pointer' onClick={()=> handleDelete(i)}/>
+                            <div key={i}>   
+                               <Image src={item.url ? item.url : URL.createObjectURL(item)} onClick={()=> handleDelete(i)}
+                                  className='rounded-md w-full max-w-[180px] max-h-[180px] object-cover object-top block shadow-sm hover:shadow-lg overflow-hidden'/>  
                             </div>  
                         ))
                     }
@@ -114,8 +134,8 @@ function CreateProducts() {
            </span>
            
            <button className='bg-red-400 w-full py-2 my-4 rounded-md text-white font-semibold mb-8
-                            text-lg tracking-wider transition duration-300 ease-out hover:bg-red-600 lg:w-1/2'> Create Product
-              </button>
+                 text-lg tracking-wider transition duration-300 ease-out hover:bg-red-600 lg:w-1/2'> { edit ? 'Update Product' : 'Create Product'}
+            </button>
         
       </form>
 

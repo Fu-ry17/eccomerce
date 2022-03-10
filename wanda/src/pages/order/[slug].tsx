@@ -46,7 +46,7 @@ function OrderDetails() {
 
    if(!id || !order) return <Loading />
 
-   if(!auth.accessToken  || !auth.user) return <Loading />
+   if(!auth.accessToken  || !auth.user || !order.user) return <Loading />
 
   return (
     <div className='py-8 max-w-md m-auto'>
@@ -54,7 +54,7 @@ function OrderDetails() {
         <h1 className='text-lg font-bold pb-4'> Order ID : {order._id} </h1>
 
         <div className='flex flex-col gap-y-4 font-medium'>
-          <h1> Name : {order.user && order.user.name} </h1>
+          <h1> Name : { order.user.name} </h1>
           <h2> Contact : {order.phone} </h2>
           <h6> Email: {order.user && order.user.account}</h6>
           <h3> Delivery-Location : {order.location} </h3>

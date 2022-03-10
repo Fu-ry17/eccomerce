@@ -52,7 +52,7 @@ function ProductDetails() {
 
          <div className='mb-4'>
             <Image src={images[index].url} alt="images"
-            className='rounded-md w-full max-w-[416px] max-h-[400px] object-cover object-top block shadow-sm hover:shadow-lg '/>
+            className='rounded-md w-full max-w-[416px] h-[400px] max-h-[400px] object-cover object-top block shadow-sm hover:shadow-lg '/>
 
                   <div className='grid grid-cols-4 gap-2 max-h-[130px] overflow-auto py-2'>
                     {
@@ -80,8 +80,7 @@ function ProductDetails() {
                 <h1 className='text-xl font-bold py-4'> ksh: {Number(product.price).toFixed(2)}</h1>
                 <div className='flex justify-between mb-4 font-semibold'>
                    <span> sold: {product.sold}</span>
-                   <span> rating: {product.rating}</span>
-                   <span> reviews: {product.reviews} </span>
+                   <span> quantity in stock: {product.quantityInStock}</span>
                 </div>
             </div>
 

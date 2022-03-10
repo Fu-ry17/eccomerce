@@ -7,9 +7,7 @@ import ProductsCard from './ProductsCard';
 function AllProducts() {
   const { products } = useSelector(( state: RootStore) => state)
 
-  return <div>
-      <h1> All Products </h1>
-      
+  return <div className='w-full'>  
       {
         products.map(item => (
           <ProductsCard key={item._id} product={item}/>

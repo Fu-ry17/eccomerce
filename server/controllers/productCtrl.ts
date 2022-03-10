@@ -147,7 +147,34 @@ const productCtrl  = {
          } catch (error: any) {
             return res.status(500).json({ msg: error.message})
          }
+     },
+     updateProducts: async(req: IReqAuth, res: Response) => {
+        if(!req.user) return res.status(400).json({ msg: 'invalid authoriation'})
+        if(req.user.role !== 'admin') return res.status(400).json({ msg: 'invalid authoriation'})
+
+         try {
+               
+            const { title, description, category, price, images, quantityInStock } = req.body
+
+            const new_title = title.toLowerCase()
+
+            const slug = title.toLowerCase().replace(/ /g, '')
+
+            const check = await Products.findOne({ _id: req.params.id })
+
+            if(!check) return res.status(400).json({ msg: 'No product was found!'})
+
+            const updatedProduct = await Products.findByIdAndUpdate(req.params.id,
+                 { title: new_title , description, category, price, images, quantityInStock, slug },{ new: true})
+            
+            return res.status(200).json({ msg: 'Update success..', updatedProduct })
+
+         } catch (error: any) {
+            return res.status(500).json({ msg: error.message})
+         }
      }
 }
+
+
 
 export default productCtrl
