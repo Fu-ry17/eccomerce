@@ -3,26 +3,37 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
 import Loading from '../../components/alert/Loading'
+import { updateOrder } from '../../redux/actions/orderActions'
 import { ALERT } from '../../redux/types/alertTypes'
 import { getAPI } from '../../utils/fetchData'
 import { IOrders, IProducts, RootStore } from '../../utils/TypeScript'
+import moment from 'moment'
 
 function OrderDetails() {
   const id = useParams<string>().slug
   const [order, setOrder] = useState<IOrders>()
   const [total, setTotal] = useState<number>(0)
 
-  const { auth } = useSelector((state: RootStore)=> state)
+  const { auth, orders } = useSelector((state: RootStore)=> state)
   const dispatch = useDispatch()
 
    useEffect(()=>{
-      if(!auth.accessToken) return
-      getAPI(`/orders/${id}`, auth.accessToken)
-      .then(res => {
-         setOrder(res.data.order)
-      })
-      .catch(err => dispatch({ type: ALERT, payload: { error: err.response.data.msg } }))
-   },[auth.accessToken, id, dispatch])
+      if(!auth.accessToken && !auth.user) return
+
+      if(auth.user?.role === 'admin'){
+         orders.forEach(item => {
+            if(item._id === id){
+               setOrder(item)
+            }
+         })  
+      }else{
+          getAPI(`/orders/${id}`, auth.accessToken)
+          .then(res => {
+            setOrder(res.data.order)
+          })
+          .catch(err => dispatch({ type: ALERT, payload: { error: err.response.data.msg } }))
+      }
+   },[auth.accessToken, id, dispatch, auth.user, orders])
 
    useEffect(()=>{
       if(!order) return
@@ -34,6 +45,8 @@ function OrderDetails() {
    },[order])
 
    if(!id || !order) return <Loading />
+
+   if(!auth.accessToken  || !auth.user) return <Loading />
 
   return (
     <div className='py-8 max-w-md m-auto'>
@@ -48,13 +61,28 @@ function OrderDetails() {
           <h4> Payment-Method : {order.paymentMethod}</h4>
           <h5> Paid : {order.paid ? 'Paid' : 'Not Paid' } </h5>
           <span> Ordred On : {new Date(order.createdAt as Date).toLocaleDateString()}</span>
+          {
+            order.status &&  <span> Delivered On : {new Date(order.updatedAt as Date).toLocaleDateString()}</span>
+          }
+         
+
+          {
+            order.notes && <p className='text-justify leading-7'> Note: {order.notes}</p>
+          }
+        
         </div>
 
         <h1 className='text-2xl font-bold my-6'>ksh {total.toFixed(2)}</h1>
-
-        <div className='my-8 p-2 bg-red-400 text-center text-white'>
-          { order.status ? 'Delivered' : 'Not Delivered'}
-        </div>
+         
+         {
+            auth.user.role === 'admin' ? 
+            <button className={`mb-8 py-2 ${order.status ? 'bg-green-400': 'bg-red-400'} text-center text-white w-full`} onClick={()=> dispatch(updateOrder((auth.accessToken as string), order))}>
+              { order.status === true ? 'Delivered' : 'Not Delivered'}
+            </button> :
+             <div className={`my-8 p-2 ${order.status ? 'bg-green-400': 'bg-red-400'} text-center text-white`}>
+               { order.status ? 'Delivered' : 'Not Delivered'}
+             </div>
+         }
                     
         <div>
           {
@@ -80,6 +108,9 @@ function OrderDetails() {
                 </div>
             ))
           }
+           
+         
+          
         </div>
     </div>
   )

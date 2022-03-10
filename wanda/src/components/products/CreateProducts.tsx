@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createProducts } from '../../redux/actions/productActions';
 import { ALERT } from '../../redux/types/alertTypes';
@@ -13,6 +13,7 @@ function CreateProducts() {
  
   const dispatch = useDispatch()
   const { categories, auth } = useSelector(( state: RootStore) => state)
+
 
   const { title, description, price, quantityInStock, category } = products
 

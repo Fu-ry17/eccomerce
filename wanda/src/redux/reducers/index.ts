@@ -10,6 +10,7 @@ import openNotification from "./openNotification";
 import userOrderReducer from "./userOrdersreducer";
 import wishListReducer from "./wishListReducer";
 import userNotificationReducer from "./userNotificationReducer";
+import ordersReducer from "./ordersReducer";
 
 const reducers = combineReducers({
     auth: authReducer,
@@ -22,7 +23,8 @@ const reducers = combineReducers({
     openNotify: openNotification,
     userOrders: userOrderReducer,
     wishList: wishListReducer,
-    userNotifications: userNotificationReducer
+    userNotifications: userNotificationReducer,
+    orders: ordersReducer
 })
 
 export default reducers

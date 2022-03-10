@@ -21,7 +21,7 @@ function ProductDetails() {
 
    useEffect(()=> {
       if(!slug) return
-      products.forEach(item => {
+       products.forEach(item => {
          if(item.slug === slug){
            setProduct(item)
            if(!product) return

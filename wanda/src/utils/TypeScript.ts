@@ -72,7 +72,7 @@ export interface IOrders{
     paid?: boolean
     status?: boolean
     createdAt?: Date
-    updatedAt?: string
+    updatedAt?: Date
 }
 
 export interface INotification{

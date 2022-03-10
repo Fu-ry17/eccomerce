@@ -5,8 +5,6 @@ import { Link } from 'react-router-dom'
 import { createOrder } from '../../redux/actions/orderActions'
 import { InputChange, IProducts, RootStore } from '../../utils/TypeScript'
 import StripeCheckout from 'react-stripe-checkout';
-import { validOrder } from '../../utils/valid'
-import { ALERT } from '../../redux/types/alertTypes'
 
 interface IProps{
   cart: IProducts[]
@@ -23,7 +21,6 @@ const UserDetails: React.FC<IProps> = ({ cart }) => {
 
  const paymentMethods = [
     {name: 'M-pesa'},
-    {name: 'Paypal'},
     {name: 'CreditCard'},
     {name: 'On-Delivery'}
  ]
@@ -44,6 +41,7 @@ const UserDetails: React.FC<IProps> = ({ cart }) => {
    const { name, value} = e.target
    setData({ ...data, [name]:value})
  }
+
 
  const onToken = (token: any) => {
     console.log(token.id)

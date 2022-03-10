@@ -1,6 +1,5 @@
 import { Image } from '@chakra-ui/react'
 import React from 'react'
-import { Link } from 'react-router-dom'
 import { IProducts } from '../../utils/TypeScript'
 
 interface IProps{
@@ -8,6 +7,7 @@ interface IProps{
 }
 
 const ProductsCard: React.FC<IProps> = ({ product }) => {
+
   return (
     <div className="flex justify-between items-center shadow-md border rounded-md mb-4 p-2 w-full" >
       <Image src={product.images[0].url} 
@@ -20,7 +20,7 @@ const ProductsCard: React.FC<IProps> = ({ product }) => {
       </div>
 
       <div className='flex flex-col items-center justify-center'>
-        <div className=''>edit  </div>  
+          <div className=''> edit  </div>  
           <i className='bx bx-trash'></i>
       </div>
   

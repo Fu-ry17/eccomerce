@@ -18,4 +18,10 @@ router.get('/user/orders/:id', auth, orderCtrl.getUserOrders)
 
 router.get('/orders/:id', auth, orderCtrl.getOrderById)
 
+router.get('/orders', auth, orderCtrl.getAllOrders)
+
+router.patch('/orders/delivered/:id', auth, orderCtrl.updateOrders)
+
+router.delete('/orders/:id', auth, orderCtrl.deleteOrder)
+
 export default router

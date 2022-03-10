@@ -10,6 +10,7 @@ import Shop from './pages/shop'
 
 import { refreshToken } from './redux/actions/authActions';
 import { getCategories } from './redux/actions/categoryActions';
+import { getAllOrders } from './redux/actions/orderActions';
 import { getAllProducts, getShopProducts } from './redux/actions/productActions';
 import { getNotifications, getuserOrders } from './redux/actions/userActions';
 import { GET_CART } from './redux/types/cartTypes';
@@ -39,6 +40,9 @@ export default function App() {
     if(!auth.accessToken || !auth.user) return
     dispatch(getuserOrders( auth.user._id, auth.accessToken))
     dispatch(getNotifications( auth.user._id, auth.accessToken))
+    if(auth.user.role === 'admin'){
+      dispatch(getAllOrders(auth.accessToken))
+    }
   },[dispatch, auth.accessToken, auth.user])
 
   useEffect(()=>{

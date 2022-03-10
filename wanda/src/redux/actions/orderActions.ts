@@ -1,9 +1,11 @@
+import { token } from "morgan";
 import { Dispatch } from "redux";
-import { getAPI, postAPI } from "../../utils/fetchData";
-import { IOrders, IProducts } from "../../utils/TypeScript";
+import { getAPI, patchAPI, postAPI } from "../../utils/fetchData";
+import { IOrders , IProducts} from "../../utils/TypeScript";
 import { validOrder } from "../../utils/valid";
 import { ALERT, IAlertTypes } from "../types/alertTypes";
 import { IAuth } from "../types/authTypes";
+import { GET_ORDERS, IOrdersTypes, UPDATE_ORDER } from "../types/orderTypes";
 
 
 export const createOrder = (phone: string, data: IOrders, cart: IProducts[], auth: IAuth, amount: number, token?: string) => async(dispatch: Dispatch<IAlertTypes>) => {
@@ -45,6 +47,38 @@ export const createOrder = (phone: string, data: IOrders, cart: IProducts[], aut
            }, 1000) 
        }
         
+    } catch (error: any) {
+        return dispatch({ type: ALERT, payload: { error: error.response.data.msg }})
+    }
+}
+
+export const getAllOrders = (token: string) => async(dispatch: Dispatch<IAlertTypes | IOrdersTypes>) => {
+    try {
+        const res = await getAPI(`orders`, token)
+
+        dispatch({ type: GET_ORDERS, payoad: res.data.orders })
+        
+    } catch (error: any) {
+        return dispatch({ type: ALERT, payload: { error: error.response.data.msg }})
+    }
+}
+
+export const updateOrder = (token: string, data: IOrders) => async(dispatch: Dispatch<IAlertTypes | IOrdersTypes>) =>{
+    try {
+        dispatch({ type: ALERT, payload: { loading: true }})
+        let new_item
+        if(data.status === false){
+            new_item = { ...data, paid: true , status: true}
+        }else{
+            new_item = { ...data, status: false }
+        }
+
+        const res = await patchAPI(`orders/delivered/${new_item._id}`, {...new_item}, token)
+
+        dispatch({ type: UPDATE_ORDER, payload: res.data.new_order})
+
+        dispatch({ type: ALERT, payload: { success: res.data.msg }})
+
     } catch (error: any) {
         return dispatch({ type: ALERT, payload: { error: error.response.data.msg }})
     }

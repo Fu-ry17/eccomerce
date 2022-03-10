@@ -227,20 +227,61 @@ const orderCtrl = {
               return res.status(500).json({ msg: error.message})
           }
       },
-      
-}
+      getAllOrders: async(req: IReqAuth, res: Response) => {
+          if(!req.user) return res.status(400).json({ msg: 'Invalid authorization'})
+          if(req.user.role !== 'admin') return res.status(400).json({ msg: 'Invalid authoriation'})
+
+          try {
+              const orders = await Orders.find().populate('user').sort('-createdAt')
+              return res.status(200).json({ orders })
+
+          } catch (error: any) {
+              return res.status(500).json({ msg: error.message })
+          }
+      },
+      updateOrders: async(req: IReqAuth, res: Response) => {
+         if(!req.user) return res.status(400).json({ msg: 'Invalid authorization'})
+         if(req.user.role !== 'admin') return res.status(400).json({ msg: 'Invalid authoriation'})
+
+          try {
+              const { status, paid} = req.body
+              const new_order = await Orders.findByIdAndUpdate(req.params.id, { status, paid}, { new: true})
+
+              return res.status(200).json({ msg: 'Update success', new_order })
+
+          } catch (error: any) {
+              return res.status(500).json({ msg: error.message })
+          }
+      },
+      deleteOrder: async(req: IReqAuth, res: Response) => {
+          if(!req.user) return res.status(400).json({ msg: 'Invalid authorization'})
+          if(req.user.role !== 'admin') return res.status(400).json({ msg: 'Invalid authoriation'})
+          try {     
+               await Orders.findByIdAndUpdate(req.params.id)
+               return res.status(200).json({ msg: 'delete success'})
+
+          } catch (error: any) {
+              return res.status(500).json({ msg: error.message })
+          }
+       }
+     }
 
 const getMpesaResponse = async (url: string, data: object, token: string, res: Response) => {
     try {
         const response = await axios.post(url, data, { headers: { Authorization: token}})
 
         if(response.data.ResultCode !== 0){
-            return res.status(400).json({ msg: response.data.ResultDesc})
+           const reply = 'The service request is processed successfully.'
+           if(response.data.ResultDesc === reply){
+              clearTimeout()
+              return res.status(200).json({ msg: response.data.ResultDesc})
+           }else{
+              clearTimeout()
+              return res.status(400).json({ msg: response.data.ResultDesc })
+            }
         }else if(response.data.ResultCode === 0){
-            const reply = 'The service request is processed successfully'
-            if(response.data.ResultDesc === reply){
-                return res.status(200).json({ msg: response.data.ResultDesc})
-            } 
+                console.log({ ms2: response.data})
+                return res.status(400).json({ msg: response.data.ResultDesc })
         }
     } catch (error: any) { 
         const err = error.response.data.errorMessage 
