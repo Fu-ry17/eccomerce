@@ -17,6 +17,7 @@ export interface IGetByCategory{
    id: string
    products: IProducts[]
    total: number
+   search: string
 }
 
 export interface IGetByCategoryTypes{

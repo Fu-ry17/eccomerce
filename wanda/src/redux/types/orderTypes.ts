@@ -7,7 +7,8 @@ export const UPDATE_ORDER = 'UPDATE_ORDER'
 
 export interface IGetUserOrders{
     orders?: IOrders[]
-    total?: number
+    total?: number,
+    search?: string
 }
 
 export interface IGetUserOrdersTypes{

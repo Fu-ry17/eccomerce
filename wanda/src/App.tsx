@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, useLocation } from 'react-router-dom'
 import Alert from './components/alert/Alert';
 import NavBar from './components/nav/NavBar';
 import Notification from './components/Notification';
@@ -20,6 +20,7 @@ import { RootStore } from './utils/TypeScript';
 export default function App() {
   const dispatch = useDispatch()
   const { cart, auth } = useSelector((state: RootStore) => state)
+  const { search } = useLocation()
 
   useEffect(()=> {
     const check = localStorage.getItem('cart')
@@ -38,12 +39,12 @@ export default function App() {
 
   useEffect(()=>{
     if(!auth.accessToken || !auth.user) return
-    dispatch(getuserOrders( auth.user._id, auth.accessToken))
+    dispatch(getuserOrders( auth.user._id, auth.accessToken, search))
     dispatch(getNotifications( auth.user._id, auth.accessToken))
     if(auth.user.role === 'admin'){
       dispatch(getAllOrders(auth.accessToken))
     }
-  },[dispatch, auth.accessToken, auth.user])
+  },[dispatch, auth.accessToken, auth.user, search])
 
   useEffect(()=>{
     const new_item = JSON.stringify(cart)

@@ -23,7 +23,7 @@ function Profile() {
            <WishList wishList={wishList} cart={cart}/>
         </div>
 
-        <UserOrders id={auth.user._id} />
+        <UserOrders id={auth.user._id} token={auth.accessToken} />
     </div>
   )
 }

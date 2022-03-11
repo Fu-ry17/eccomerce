@@ -6,7 +6,7 @@ import Notification from "../models/notifcationModel"
 import mongoose from 'mongoose'
 
 const Pagination = (req: IReqAuth) => {
-     const limit = Number(req.query.limit) * 1 || 4
+     const limit = Number(req.query.limit) * 1 || 3
      const page = Number(req.query.page) * 1 || 1
      const skip = (page - 1) * limit
 
@@ -33,19 +33,6 @@ const productCtrl  = {
             const newProduct = new Products({ title: new_title , description, category, price, images, quantityInStock, slug })
 
             await newProduct.save()
-
-            const users = await Users.find()
-
-            let message = 'A new product has been created'
-            let icon = 'https://cdn.vox-cdn.com/thumbor/BG_Wo6a2Xs5SYloPZT_37wsgwDE=/1400x1400/filters:format(jpeg)/cdn.vox-cdn.com/uploads/chorus_asset/file/22000282/maxresdefault.jpg'
-            users.map( async user => {
-                if(user.role !== 'admin'){
-                    const new_notification = new Notification({
-                        user: user._id, message, url: newProduct.slug, icon
-                    })          
-                    await new_notification.save()  
-                }        
-             })
 
             return res.status(200).json({ msg: 'Product created!' , newProduct })
 
@@ -105,8 +92,8 @@ const productCtrl  = {
                         totalData: [
                             { $match: { category: new mongoose.Types.ObjectId(req.params.id )}},
                             { $sort: { "createdAt": -1 }},
-                            {$limit: limit},
-                            {$skip: skip}
+                            { $limit: limit},
+                            { $skip: skip }
                         ],
                         totalCount: [
                             { $match: { category: new mongoose.Types.ObjectId(req.params.id)}},

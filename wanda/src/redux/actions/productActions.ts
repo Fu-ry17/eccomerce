@@ -19,12 +19,15 @@ export const getShopProducts = () => async(dispatch: Dispatch<IAlertTypes | IGet
     }
 }
 
-export const getProductByCategory = (category: string) => async(dispatch: Dispatch<IAlertTypes | IGetByCategoryTypes>) => {
+export const getProductByCategory = (category: string, search: string) => async(dispatch: Dispatch<IAlertTypes | IGetByCategoryTypes>) => {
     try {
+        let limit = 10
+        let value = search ? search : `?page=${1}`
+        
         dispatch({ type: ALERT, payload: { loading: true } })
-        const res = await getAPI(`category/products/${category}`)
+        const res = await getAPI(`category/products/${category}${value}&limit=${limit}`)
 
-        dispatch({ type: GET_PRODUCTS_BY_CATEGORY, payload: { ...res.data, id: category }})
+        dispatch({ type: GET_PRODUCTS_BY_CATEGORY, payload: { ...res.data, id: category, search }})
         dispatch({ type: ALERT, payload: { } })
 
     } catch (error: any) {

@@ -56,12 +56,14 @@ export const updatePassword = (password: string, cf_password: string, token: str
     }
 }
 
-export const getuserOrders = (id: string, token: string) => async(dispatch: Dispatch<IAlertTypes | IGetUserOrdersTypes>) => {
+export const getuserOrders = (id: string, token: string, search: string) => async(dispatch: Dispatch<IAlertTypes | IGetUserOrdersTypes>) => {
     try {
+        let limit = 6;
+        let value = search ? search : `?page=${1}`
         dispatch({ type: ALERT, payload: { loading: true }})
-        const res = await getAPI(`/user/orders/${id}`, token)
+        const res = await getAPI(`/user/orders/${id}${value}&limit=${limit}`, token)
 
-        dispatch({ type: GET_USER_ORDERS, payload: res.data })
+        dispatch({ type: GET_USER_ORDERS, payload: {...res.data, search} })
         dispatch({ type: ALERT, payload: { }})
         
 
