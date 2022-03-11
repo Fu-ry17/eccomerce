@@ -16,7 +16,7 @@ const UserOrders: React.FC<IProps> = ({ id, token }) => {
   const { userOrders } = useSelector(( state: RootStore) => state)
   const dispatch = useDispatch()
 
-  if(!userOrders.orders  || !userOrders.total) return <Loading />
+  if(!userOrders.orders  || !userOrders.total) return <h1> You currently have no Orders </h1>
 
   const handlePagination = (num: number) =>{
     const search = `?page=${num}`

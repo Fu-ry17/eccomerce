@@ -39,7 +39,9 @@ export default function App() {
 
   useEffect(()=>{
     if(!auth.accessToken || !auth.user) return
-    dispatch(getuserOrders( auth.user._id, auth.accessToken, search))
+    if(auth.user.role !== 'admin'){
+      dispatch(getuserOrders( auth.user._id, auth.accessToken, search))
+    } 
     dispatch(getNotifications( auth.user._id, auth.accessToken))
     if(auth.user.role === 'admin'){
       dispatch(getAllOrders(auth.accessToken))
