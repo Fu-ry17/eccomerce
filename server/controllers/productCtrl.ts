@@ -193,7 +193,7 @@ export const notifications = async(id: string, user: IUser, res: Response, produ
     let msg = `Hello! ${user.name}, ${product.title} is now available`
     let icon = product.images[0].url as string
     let url = `${process.env.BASE_URL}/shop/${product_id}`
-    let url_id = `shop/${product_id}`
+    let url_id = `shop/${product.slug}`
 
     const notify = new Notifications({ id, user: user._id, message: msg, icon, url, url_id })
     await notify.save()
