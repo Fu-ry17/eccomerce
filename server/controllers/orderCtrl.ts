@@ -315,7 +315,7 @@ export const notifications = async(id: string, user: IUser, res: Response, order
     let url = `${process.env.BASE_URL}/order/${order_id}`
     let url_id = `order/${order_id}`
 
-    const notify = new Notifications({ id, user: user._id, message: msg, icon, url, url_id: order_id })
+    const notify = new Notifications({ id, user: user._id, message: msg, icon, url, url_id })
     await notify.save()
 }
 
