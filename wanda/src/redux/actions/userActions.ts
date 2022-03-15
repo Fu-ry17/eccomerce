@@ -76,7 +76,6 @@ export const getNotifications = (id: string, token: string) => async(dispatch: D
     try {   
         const res = await getAPI(`notification/user/${id}`, token)
         dispatch({ type: GET_USER_NOTIFICATIONS, payload: res.data.notification})
-
     } catch (error: any) {
         dispatch({ type: ALERT, payload: { error: error.response.data.msg }})  
     }

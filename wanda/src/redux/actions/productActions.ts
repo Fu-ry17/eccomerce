@@ -1,9 +1,9 @@
 import { Dispatch } from "redux"
-import { getAPI, patchAPI, postAPI } from "../../utils/fetchData"
+import { deleteAPI, getAPI, patchAPI, postAPI } from "../../utils/fetchData"
 import { imageUpload } from "../../utils/imageUpload"
 import { IProducts } from "../../utils/TypeScript"
 import { ALERT, IAlertTypes } from "../types/alertTypes"
-import { GET_PRODUCTS, GET_PRODUCTS_BY_CATEGORY, IGetByCategoryTypes, IGetProductTypes, IGetShopProductTypes, IProductsTypes, SHOP, UPDATE_PRODUCT } from "../types/productTypes"
+import { DELETE_PRODUCT, GET_PRODUCTS, GET_PRODUCTS_BY_CATEGORY, IGetByCategoryTypes, IGetProductTypes, IGetShopProductTypes, IProductsTypes, SHOP, UPDATE_PRODUCT } from "../types/productTypes"
 
 
 export const getShopProducts = () => async(dispatch: Dispatch<IAlertTypes | IGetShopProductTypes>) => {
@@ -89,3 +89,17 @@ export const updateProduct = (data: IProducts, images: any[], token: string) => 
     }
 }
 
+export const deleteProduct = (id: string, token: string) => async(dispatch: Dispatch<IAlertTypes | IProductsTypes>) =>{
+    try {
+        dispatch({ type: ALERT, payload: { loading: true }})
+
+        dispatch({ type: DELETE_PRODUCT, payload: id })
+        
+        const res = await deleteAPI(`products/${id}`, token)
+
+        dispatch({ type: ALERT, payload: { success: res.data.msg }})
+
+    } catch (error: any) {
+      dispatch({ type: ALERT, payload: { error: error.response.data.msg }})
+    }
+}

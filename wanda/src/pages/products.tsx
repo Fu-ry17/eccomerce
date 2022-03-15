@@ -22,7 +22,7 @@ function Products() {
       <main className=''>
            <AllProducts />
       </main>
-  </div>;
+  </div>
 }
 
 export default Products;

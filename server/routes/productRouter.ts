@@ -14,5 +14,6 @@ router.get('/admin/products', productCtrl.getAllProducts)
 
 router.route('/products/:id')
       .patch(auth, validProducts, productCtrl.updateProducts)
+      .delete(auth, productCtrl.deleteProduct)
 
 export default router

@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { IReqAuth } from "../config/interface";
+import { IProducts, IReqAuth, IUser } from "../config/interface";
 import Products from "../models/productModel";
 import Users from "../models/userModel"
-import Notification from "../models/notifcationModel"
+import Notifications from "../models/notifcationModel"
 import mongoose from 'mongoose'
 
 const Pagination = (req: IReqAuth) => {
@@ -33,6 +33,16 @@ const productCtrl  = {
             const newProduct = new Products({ title: new_title , description, category, price, images, quantityInStock, slug })
 
             await newProduct.save()
+
+            const users = await Users.find().select('-password')
+
+            users.map(user => {
+                if(user.role !== 'admin'){
+                    let id = user._id
+                    let productId = newProduct._id
+                    notifications(id, user, res, newProduct ,productId)
+                }
+            })
 
             return res.status(200).json({ msg: 'Product created!' , newProduct })
 
@@ -67,7 +77,7 @@ const productCtrl  = {
                 // paginate
                 {
                     $project: {
-                        products: { $slice: [ '$products', 0, 8]},
+                        products: { $slice: [ '$products', 0, 5]},
                         name: 1,
                         count: 1
                     }
@@ -159,9 +169,35 @@ const productCtrl  = {
          } catch (error: any) {
             return res.status(500).json({ msg: error.message})
          }
+     },
+     deleteProduct: async(req: IReqAuth, res: Response) => {
+        if(!req.user) return res.status(400).json({ msg: 'invalid authoriation'})
+        if(req.user.role !== 'admin') return res.status(400).json({ msg: 'invalid authoriation'})
+
+         try {             
+            const check = await Products.findOne({ _id: req.params.id })
+
+            if(!check) return res.status(400).json({ msg: 'No product was found!'})
+
+            await Products.findByIdAndDelete(req.params.id)
+            
+            return res.status(200).json({ msg: 'Delete success..'})
+
+         } catch (error: any) {
+            return res.status(500).json({ msg: error.message})
+         }
      }
 }
 
+export const notifications = async(id: string, user: IUser, res: Response, product: any, product_id: string) => {
+    let msg = `Hello! ${user.name}, ${product.title} is now available`
+    let icon = product.images[0].url as string
+    let url = `${process.env.BASE_URL}/shop/${product_id}`
+    let url_id = `shop/${product_id}`
 
+    const notify = new Notifications({ id, user: user._id, message: msg, icon, url, url_id })
+    await notify.save()
+
+}
 
 export default productCtrl

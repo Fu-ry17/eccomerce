@@ -1,12 +1,12 @@
 import  {Request, response, Response } from 'express'
 import { generatePassword } from '../config/generateTokens'
-import { IProducts, IReqAuth } from '../config/interface'
+import { IProducts, IReqAuth, IUser } from '../config/interface'
 import { sendSms } from '../config/sendSms'
 import Orders from '../models/ordersModel'
 import axios from 'axios'
 import Products from '../models/productModel'
 import mongoose from 'mongoose'
-import Notification from '../models/notifcationModel'
+import Notifications from '../models/notifcationModel'
 import Users from '../models/userModel'
 import sendEmail from '../config/sendEmail'
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
@@ -43,7 +43,19 @@ const orderCtrl = {
                 location, paymentMethod, phone, paid, notes, cart, user: req.user._id
             })
 
-            await new_order.save()
+           await new_order.save()
+
+           const users = await Users.find()
+
+           users.map(user => {
+                if(!req.user) return
+                let orderId = new_order._id
+                let user_data = req.user
+                if(user.role === 'admin'){
+                    let id = user._id
+                    notifications( id, user_data, res, orderId)
+                }
+           })
     
            sendSms(phone, req.user.name)
 
@@ -263,7 +275,7 @@ const orderCtrl = {
           } catch (error: any) {
               return res.status(500).json({ msg: error.message })
           }
-       }
+      }
      }
 
 const getMpesaResponse = async (url: string, data: object, token: string, res: Response) => {
@@ -286,7 +298,6 @@ const getMpesaResponse = async (url: string, data: object, token: string, res: R
     } catch (error: any) { 
         const err = error.response.data.errorMessage 
         if(err === 'The transaction is being processed'){
-            console.log({err})
             setTimeout(()=> getMpesaResponse(url, data, token,res), 2500)
         }
     }
@@ -296,6 +307,16 @@ const updateProducts = async( id: string, qty: number, oldSold: number, oldStock
     await Products.findByIdAndUpdate(id, {
         sold: qty + oldSold, quantityInStock: oldStock - qty
     })
+}
+
+export const notifications = async(id: string, user: IUser, res: Response, order_id: string) => {
+    let msg = `${user.name} has successfully placed an order`
+    let icon = user.avatar as string
+    let url = `${process.env.BASE_URL}/order/${order_id}`
+    let url_id = `order/${order_id}`
+
+    const notify = new Notifications({ id, user: user._id, message: msg, icon, url, url_id: order_id })
+    await notify.save()
 }
 
 export default orderCtrl

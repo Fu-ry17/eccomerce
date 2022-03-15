@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import Loading from '../../components/alert/Loading';
 import NotFound from '../../components/NotFound';
 import { Images, IProducts, RootStore } from '../../utils/TypeScript';
@@ -86,9 +86,13 @@ function ProductDetails() {
 
             <div className='py-4'>
               {
-                 product.quantityInStock === 0 ?   <button className='bg-red-400 text-white py-2 md:w-1/2 px-2 w-full rounded-md'> Out Of Stock </button>
-                 : <button className='bg-red-400 text-white py-2 md:w-1/2 px-2 w-full rounded-md' onClick={()=> dispatch(addToCart(product, cart))}> Add To Cart </button>
+                auth.user?.role === 'admin' ? <Link to={`/create_product?slug=${product.slug}`}> 
+                   <button className='bg-red-400 text-white py-2 md:w-1/2 px-2 w-full rounded-md'> Edit Product </button> </Link>
+                : 
+                product.quantityInStock === 0 ?   <button className='bg-red-400 text-white py-2 md:w-1/2 px-2 w-full rounded-md'> Out Of Stock </button>
+                : <button className='bg-red-400 text-white py-2 md:w-1/2 px-2 w-full rounded-md' onClick={()=> dispatch(addToCart(product, cart))}> Add To Cart </button>
               }
+            
               
             </div>
 

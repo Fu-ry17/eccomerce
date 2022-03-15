@@ -78,6 +78,7 @@ export interface IOrders{
 export interface INotification{
     _id: string
     createdAt: string
+    url_id: string
     icon: string
     message: string
     read: boolean

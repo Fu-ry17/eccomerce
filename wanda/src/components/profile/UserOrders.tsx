@@ -16,12 +16,14 @@ const UserOrders: React.FC<IProps> = ({ id, token }) => {
   const { userOrders } = useSelector(( state: RootStore) => state)
   const dispatch = useDispatch()
 
-  if(!userOrders.orders  || !userOrders.total) return <h1> You currently have no Orders </h1>
+  if(!userOrders.orders  || !userOrders.total) return <Loading />
 
   const handlePagination = (num: number) =>{
     const search = `?page=${num}`
     dispatch(getuserOrders(id, token, search))
   } 
+
+  if(userOrders.orders.length === 0) return <h1> You currently have no order </h1>
 
   return (
     <div className=''>
