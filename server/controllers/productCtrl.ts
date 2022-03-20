@@ -138,7 +138,7 @@ const productCtrl  = {
      },
      getAllProducts: async(req: Request, res: Response) => {      
          try {
-             const products = await Products.find()
+             const products = await Products.find().sort('-createdAt')
              return res.status(200).json({ products})
 
          } catch (error: any) {
@@ -190,7 +190,7 @@ const productCtrl  = {
 }
 
 export const notifications = async(id: string, user: IUser, res: Response, product: any, product_id: string) => {
-    let msg = `Hello! ${user.name}, ${product.title} is now available`
+    let msg = `Hello! ${user.name}, ${product.title} is now available, check it out!`
     let icon = product.images[0].url as string
     let url = `${process.env.BASE_URL}/shop/${product_id}`
     let url_id = `shop/${product.slug}`

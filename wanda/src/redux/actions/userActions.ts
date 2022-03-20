@@ -1,10 +1,11 @@
 import { Dispatch } from "redux";
-import { getAPI, patchAPI } from "../../utils/fetchData";
+import { deleteAPI, getAPI, patchAPI } from "../../utils/fetchData";
 import { imageUpload } from "../../utils/imageUpload";
+import { INotification } from "../../utils/TypeScript";
 import { validPassword } from "../../utils/valid";
 import { ALERT, IAlertTypes } from "../types/alertTypes";
 import { AUTH, IAuth, IAuthTypes } from "../types/authTypes";
-import { GET_USER_NOTIFICATIONS, IGetUserNotifyTypes } from "../types/noticationTypes";
+import { DELETE_NOTIFY, GET_USER_NOTIFICATIONS, IDeleteNotifyTypes, IGetUserNotifyTypes, IReadNotifyTypes, READ_NOTIFY } from "../types/noticationTypes";
 import { GET_USER_ORDERS, IGetUserOrdersTypes } from "../types/orderTypes";
 
 export const updateUser = (name: string, avatar: File, auth: IAuth) => async(dispatch: Dispatch<IAlertTypes| IAuthTypes >) => {
@@ -76,6 +77,31 @@ export const getNotifications = (id: string, token: string) => async(dispatch: D
     try {   
         const res = await getAPI(`notification/user/${id}`, token)
         dispatch({ type: GET_USER_NOTIFICATIONS, payload: res.data.notification})
+    } catch (error: any) {
+        dispatch({ type: ALERT, payload: { error: error.response.data.msg }})  
+    }
+}
+
+export const readNotify = (notify: INotification, token: string) => async(dispatch: Dispatch<IAlertTypes | IReadNotifyTypes>) => {
+    try {
+       
+        let new_notify = { ...notify, read: true }
+        dispatch({ type: READ_NOTIFY, payload: new_notify})
+
+        await patchAPI(`notification/${notify._id}`, {...new_notify }, token)
+        
+    } catch (error: any) {
+        dispatch({ type: ALERT, payload: { error: error.response.data.msg }})  
+    }
+}
+
+export const deleteNotify = (id: string, token: string) => async(dispatch: Dispatch<IAlertTypes | IDeleteNotifyTypes>) => {
+    try {
+        dispatch({ type: DELETE_NOTIFY, payload: id})
+        
+        const res = await deleteAPI(`notification/${id}`, token)
+        dispatch({ type: ALERT, payload: { success: res.data.msg }})
+
     } catch (error: any) {
         dispatch({ type: ALERT, payload: { error: error.response.data.msg }})  
     }

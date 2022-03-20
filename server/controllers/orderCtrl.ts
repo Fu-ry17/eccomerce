@@ -276,7 +276,7 @@ const orderCtrl = {
               return res.status(500).json({ msg: error.message })
           }
       }
-     }
+}
 
 const getMpesaResponse = async (url: string, data: object, token: string, res: Response) => {
     try {

@@ -24,10 +24,10 @@ function Notification() {
   },[])
 
   return (
-    <div className={`fixed ${openNotify ? 'right-0': '-right-full' } transition duration-500 ease-out px-2
-                    h-full bg-white w-full sm:1/2 md:1/2 lg:w-1/4 block border-l shadow-md z-100 overflow-y-scroll`}>   
+    <div className={`fixed ${openNotify ? 'right-0': '-right-full' } transition duration-500 ease-out px-2 sm:max-w-sm 
+                    h-full bg-white w-full block border-l shadow-md z-100 overflow-y-scroll`}>   
 
-      <div className='flex justify-between items-center'>
+      <div className='flex justify-between items-center w-full'>
           <h1 className='font-bold text-xl'> Notifications </h1>
          
          {
@@ -39,7 +39,7 @@ function Notification() {
          
       </div>
 
-      <div className=''>
+      <div className='w-full'>
         {
           userNotifications.map(notify => (
             <NotificationCard key={notify._id} notify={notify}/>
